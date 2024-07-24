@@ -1,7 +1,7 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:monks_food/database/customer_handler.dart';
 import 'package:monks_food/screens/auth/otp_verification_screen.dart';
-import 'package:monks_food/services/otp_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       final emailExists = await CustomerHandler().isEmailExisted(email);
       if (emailExists) {
-        await OTPService().sendOTP(email);
+        await EmailOTP.sendOTP(email: email);
         Navigator.push(
           context,
           MaterialPageRoute(

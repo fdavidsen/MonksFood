@@ -40,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         return;
       }
 
-      await CustomerHandler().registerCustomer({
+      await CustomerHandler().register({
         'username': username,
         'email': email,
         'phone': phone,
@@ -53,7 +53,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _phoneController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
-      // Navigator.pop(context);
     }
   }
 

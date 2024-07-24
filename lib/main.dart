@@ -1,7 +1,17 @@
+import 'dart:io';
+
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:monks_food/screens/auth/login_screen.dart';
+import 'package:monks_food/screens/home.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
+  EmailOTP.config(
+    appName: "Monk's Food",
+    otpType: OTPType.numeric,
+    emailTheme: EmailTheme.v4,
+  );
   runApp(const MyApp());
 }
 
@@ -32,7 +42,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: MenuScreen(),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }

@@ -1,6 +1,6 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:monks_food/screens/auth/reset_password_screen.dart';
-import 'package:monks_food/services/otp_service.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String email;
@@ -17,7 +17,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   Future<void> _verifyOTP() async {
     if (_formKey.currentState!.validate()) {
-      bool isValid = await OTPService().verifyOTP(widget.email, _otpController.text);
+      bool isValid = EmailOTP.verifyOTP(otp: _otpController.text);
       if (isValid) {
         Navigator.push(
           context,
