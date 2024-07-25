@@ -1,4 +1,4 @@
-# monks_food
+# monk_food
 
 A new Flutter project.
 
