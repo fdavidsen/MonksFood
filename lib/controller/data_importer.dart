@@ -1,6 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
-import 'package:monks_food/database/db_manager.dart';
+import 'package:monks_food/model/db_manager.dart';
 
 class DataImporter {
   static Future<void> importStoreAndMenuData() async {
@@ -42,3 +42,10 @@ class DataImporter {
     await DBManager.instance.insertMany(DBManager.instance.tableMenu, menuItems);
   }
 }
+
+List<String> categories = ["Meals", "Coffee", "Drink", "Cake"];
+
+List<String> discounts = [
+  "discount01.png",
+  "discount02.jpg",
+];

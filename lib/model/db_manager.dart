@@ -1,6 +1,6 @@
-import 'package:monks_food/models/menu_model.dart';
-import 'package:monks_food/models/store_model.dart';
-import 'package:monks_food/services/data_importer.dart';
+import 'package:monks_food/model/menu_model.dart';
+import 'package:monks_food/model/store_model.dart';
+import 'package:monks_food/controller/data_importer.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -77,6 +77,10 @@ class DBManager {
       },
       version: databaseVersion,
     );
+  }
+
+  Future<void> initDB() async {
+    await database;
   }
 
   Future<List<Store>> getAllStores() async {

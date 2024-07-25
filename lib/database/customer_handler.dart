@@ -1,11 +1,11 @@
-import 'package:monks_food/database/db_manager.dart';
-import 'package:monks_food/models/customer_model.dart';
+import 'package:monks_food/model/customer_model.dart';
+import 'package:monks_food/model/db_manager.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CustomerHandler {
   final String tableCustomers = DBManager.instance.tableCustomers;
 
-  Future<int> register(Map<String, dynamic> user) async {
+  Future<int> registerCustomer(Map<String, dynamic> user) async {
     final db = await DBManager.instance.database;
     return await db.insert(
       tableCustomers,
@@ -45,6 +45,22 @@ class CustomerHandler {
 
     if (result.isNotEmpty) {
       return Customer.fromMap(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getCustomerByEmail(String email) async {
+    final db = await DBManager.instance.database;
+
+    final result = await db.query(
+      tableCustomers,
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
     } else {
       return null;
     }
