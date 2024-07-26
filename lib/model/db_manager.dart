@@ -1,6 +1,6 @@
-import 'package:monks_food/model/menu_model.dart';
-import 'package:monks_food/model/store_model.dart';
-import 'package:monks_food/controller/data_importer.dart';
+import 'package:monk_food/model/menu_model.dart';
+import 'package:monk_food/model/store_model.dart';
+import 'package:monk_food/controller/data_importer.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

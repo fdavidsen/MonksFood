@@ -1,5 +1,5 @@
-import 'package:monks_food/model/customer_model.dart';
-import 'package:monks_food/model/db_manager.dart';
+import 'package:monk_food/model/db_manager.dart';
+import 'package:monk_food/model/customer_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CustomerHandler {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monks_food/view/onboard/onboarding.dart';
+import 'package:monk_food/view/onboard/onboarding.dart';
 
 class LaunchPage extends StatelessWidget {
   const LaunchPage({super.key});
@@ -17,29 +17,58 @@ class LaunchPage extends StatelessWidget {
           children: [
             Container(
               height: 200,
-              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/monkeylogo.png"), fit: BoxFit.cover)),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    "assets/monkeylogo.png"
+                  ),
+                  fit: BoxFit.cover
+                )
+              ),
             ),
-            const Image(image: AssetImage("assets/Rectangle 2704.png")),
+            const Image(
+              image: AssetImage(
+                "assets/Rectangle 2704.png"
+              )
+            ),
             const SizedBox(height: 20),
-            const Image(image: AssetImage("assets/Rectangle 2707.png")),
+            const Image(
+              image: AssetImage(
+                "assets/Rectangle 2707.png"
+              )
+            ),
             const SizedBox(height: 20),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image(image: AssetImage("assets/Rectangle 2708.png")),
+                Image(
+                  image: AssetImage(
+                    "assets/Rectangle 2708.png"
+                  )
+                ),
                 SizedBox(width: 20),
-                Image(image: AssetImage("assets/Rectangle 2709.png")),
+                Image(
+                  image: AssetImage(
+                    "assets/Rectangle 2709.png"
+                  )
+                ),
               ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Onboarding()));
+              onPressed: (){
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => Onboarding())
+                );
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCD5638),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5)),
+                backgroundColor: const Color(0xFFCD5638),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 5
+                )
+              ),
               child: const Row(
                 children: [
                   CircleAvatar(
@@ -57,7 +86,9 @@ class LaunchPage extends StatelessWidget {
                       children: [
                         Text(
                           "Start",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20
+                          ),
                         ),
                       ],
                     ),

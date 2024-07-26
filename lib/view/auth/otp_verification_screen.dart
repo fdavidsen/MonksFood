@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monks_food/view/auth/reset_password_screen.dart';
+import 'package:monk_food/view/auth/reset_password_screen.dart';
 import 'package:email_otp/email_otp.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.email)),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid or expired OTP')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid or expired OTP')));
       }
     }
   }
@@ -46,7 +46,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               children: <Widget>[
                 const Text(
                   "Verification",
-                  style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
+                  style: TextStyle(
+                      color: Color(0xFFCD5638),
+                      fontSize: 40
+                  ),
                 ),
                 const SizedBox(height: 100),
                 const Row(
@@ -54,7 +57,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   children: [
                     Text(
                       "OTP",
-                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
+                      style: TextStyle(
+                          color: Color(0xFFCD5638),
+                          fontSize: 16
+                      ),
                     ),
                   ],
                 ),
@@ -66,10 +72,27 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   decoration: const InputDecoration(
                       labelText: 'OTP',
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color(0xFFCD5638)
+                          )
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color(0xFFCD5638)
+                          )
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color(0xFFCD5638)
+                          )
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color(0xFFCD5638)
+                          )
+                      )
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the OTP';
@@ -81,7 +104,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 const Text(
                   "Enter the OTP code from the email we just sent you",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF727171), fontSize: 16),
+                  style: TextStyle(
+                      color: Color(0xFF727171),
+                      fontSize: 16
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -89,14 +115,23 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     const Text(
                       "Didn’t receive the OTP code ?",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Color(0xFF727171), fontSize: 16),
+                      style: TextStyle(
+                          color: Color(0xFF727171),
+                          fontSize: 16
+                      ),
                     ),
                     TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(foregroundColor: const Color(0xFFCD5638)),
+                      onPressed: (){
+
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFFCD5638)
+                      ),
                       child: const Text(
                         'Resend',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16
+                        ),
                       ),
                     )
                   ],
@@ -107,12 +142,18 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   child: ElevatedButton(
                     onPressed: _verifyOTP,
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFCD5638),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
+                      backgroundColor: const Color(0xFFCD5638),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10
+                      )
+                    ),
                     child: const Text(
                       'Next',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                          fontSize: 20
+                      ),
                     ),
                   ),
                 ),

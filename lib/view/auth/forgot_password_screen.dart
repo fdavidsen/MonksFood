@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
-import 'package:monks_food/database/customer_handler.dart';
-import 'package:monks_food/view/auth/otp_verification_screen.dart';
+import 'package:monk_food/database/customer_handler.dart';
+import 'package:monk_food/view/auth/otp_verification_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -28,7 +28,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email does not exist')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Email does not exist')));
       }
     }
   }
@@ -54,7 +54,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     type: MaterialType.transparency,
                     child: Text(
                       "Forgot Password",
-                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
+                      style: TextStyle(
+                        color: Color(0xFFCD5638),
+                        fontSize: 40
+                      ),
                     ),
                   ),
                 ),
@@ -64,7 +67,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   children: [
                     Text(
                       "Email",
-                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
+                      style: TextStyle(
+                        color: Color(0xFFCD5638),
+                        fontSize: 16
+                      ),
                     ),
                   ],
                 ),
@@ -74,12 +80,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
+                    labelText: 'Email',
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFCD5638)
+                      )
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFCD5638)
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFCD5638)
+                      )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFCD5638)
+                      )
+                    )
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -91,7 +114,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 const Text(
                   "Please enter your Email so we can help you recover your password",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF727171), fontSize: 16),
+                  style: TextStyle(
+                    color: Color(0xFF727171),
+                    fontSize: 16
+                  ),
                 ),
                 const SizedBox(height: 140),
                 SizedBox(
@@ -99,12 +125,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: ElevatedButton(
                     onPressed: _sendOTP,
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFCD5638),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
+                      backgroundColor: const Color(0xFFCD5638),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 10
+                      )
+                    ),
                     child: const Text(
                       'Next',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                        fontSize: 20
+                      ),
                     ),
                   ),
                 ),
