@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:monk_food/view/home.dart';
+import 'package:monk_food/view/customer/home.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';

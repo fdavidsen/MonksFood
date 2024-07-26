@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monk_food/database/customer_handler.dart';
-import 'package:monk_food/view/auth/terms_and_conditions_screen.dart';
+import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/customer/auth/terms_and_conditions_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -43,8 +43,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         return;
       }
 
-      if(_checkBoxTerms == true){
-        await CustomerHandler().registerCustomer({
+      if (_checkBoxTerms == true) {
+        await CustomerHandler().register({
           'username': username,
           'email': email,
           'phone': phone,
@@ -58,15 +58,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordController.clear();
         _confirmPasswordController.clear();
         Navigator.of(context).pop();
-      }
-
-      else{
+      } else {
         setState(() {
           _errorMessage = 'Please check the terms & condition box';
         });
         return;
       }
-      // Navigator.pop(context);
     }
   }
 
@@ -92,10 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 const Text(
                   "Sign Up",
-                  style: TextStyle(
-                    color: Color(0xFFCD5638),
-                    fontSize: 40
-                  ),
+                  style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
                 ),
                 const SizedBox(height: 30),
                 const Row(
@@ -103,10 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       "Username",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -116,29 +107,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(
-                    labelText: 'Username',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFCD5638)
-                      )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFCD5638)
-                      )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFCD5638)
-                      )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFCD5638)
-                      )
-                    )
-                  ),
+                      labelText: 'Username',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a username';
@@ -152,10 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       "Email",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -165,29 +136,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'Email',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter an email';
@@ -204,10 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       "Phone Number",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -217,29 +168,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _phoneController,
                   decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'Phone Number',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
@@ -257,10 +191,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       "Password",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -270,29 +201,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(
-                    labelText: 'Password',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -307,10 +221,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       "Confirm Password",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -320,29 +231,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: const InputDecoration(
-                    labelText: 'Confirm Password',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'Confirm Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -360,7 +254,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   checkColor: const Color(0xFFFFFEF2),
                   activeColor: const Color(0xFFCD5638),
                   controlAffinity: ListTileControlAffinity.leading,
-                  onChanged: (val){
+                  onChanged: (val) {
                     setState(() {
                       _checkBoxTerms = !_checkBoxTerms;
                     });
@@ -371,25 +265,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const Text(
                         "I agree to",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Color(0xFF727171),
-                            fontSize: 16
-                        ),
+                        style: TextStyle(color: Color(0xFF727171), fontSize: 16),
                       ),
                       TextButton(
-                        onPressed: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen())
-                          );
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()));
                         },
-                        style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFFCD5638)
-                        ),
+                        style: TextButton.styleFrom(foregroundColor: const Color(0xFFCD5638)),
                         child: const Text(
                           'Terms & Conditions',
-                          style: TextStyle(
-                              fontSize: 16
-                          ),
+                          style: TextStyle(fontSize: 16),
                         ),
                       )
                     ],
@@ -400,18 +285,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: _signUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFCD5638),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 10
-                      )
-                    ),
+                        backgroundColor: const Color(0xFFCD5638),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
                     child: const Text(
                       'Sign Up',
-                      style: TextStyle(
-                        fontSize: 20
-                      ),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ),

@@ -72,8 +72,6 @@ class DBManager {
             time TEXT
           );
         ''');
-
-        DataImporter.importStoreAndMenuData();
       },
       version: databaseVersion,
     );
@@ -83,20 +81,65 @@ class DBManager {
     await database;
   }
 
-  Future<List<Store>> getAllStores() async {
+  Future<int> register(String table, Map<String, dynamic> user) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableStore);
-    return List.generate(maps.length, (i) {
-      return Store.fromMap(maps[i]);
-    });
+    return await db.insert(
+      table,
+      user,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Menu>> getAllMenu() async {
+  Future<List<Map<String, Object?>>> login(String table, String username, String password) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableMenu);
-    return List.generate(maps.length, (i) {
-      return Menu.fromMap(maps[i]);
-    });
+
+    final result = await db.query(
+      table,
+      where: 'username = ? AND password = ?',
+      whereArgs: [username, password],
+    );
+    return result;
+  }
+
+  Future<bool> isUsernameUnique(String table, String username) async {
+    final db = await database;
+    final result = await db.query(
+      table,
+      where: 'username = ?',
+      whereArgs: [username],
+    );
+    return result.isEmpty;
+  }
+
+  Future<bool> isEmailExisted(String table, String email) async {
+    final db = await database;
+    final result = await db.query(
+      table,
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    return result.isNotEmpty;
+  }
+
+  Future<List<Map<String, Object?>>> getUserByEmail(String table, String email) async {
+    final db = await database;
+
+    final result = await db.query(
+      table,
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    return result;
+  }
+
+  Future<int> updatePassword(String table, String email, String newPassword) async {
+    final db = await database;
+    return await db.update(
+      table,
+      {'password': newPassword},
+      where: 'email = ?',
+      whereArgs: [email],
+    );
   }
 
   Future<void> insertMany(String table, List<Map<String, dynamic>> items) async {

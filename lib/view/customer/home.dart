@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/data_importer.dart';
-import 'package:monk_food/model/db_manager.dart';
-import 'package:monk_food/view/auth/login_screen.dart';
+import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -132,7 +132,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               FutureBuilder(
-                  future: DBManager.instance.getAllMenu(),
+                  future: CustomerHandler().getAllMenu(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -381,7 +381,7 @@ Widget SideDrawer(BuildContext context) {
         ElevatedButton(
           onPressed: () async {
             await saveLoginState(false);
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ChooseIdentity()));
           },
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
           child: const Text("Sign Out"),

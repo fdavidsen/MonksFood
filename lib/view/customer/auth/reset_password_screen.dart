@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monk_food/database/customer_handler.dart';
-import 'package:monk_food/view/auth/login_screen.dart';
+import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/customer/auth/login_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
@@ -46,10 +46,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               children: <Widget>[
                 const Text(
                   "Reset Password",
-                  style: TextStyle(
-                    color: Color(0xFFCD5638),
-                    fontSize: 40
-                  ),
+                  style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
                 ),
                 const SizedBox(height: 100),
                 const Row(
@@ -57,10 +54,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   children: [
                     Text(
                       "New Password",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -70,29 +64,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(
-                    labelText: 'New Password',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'New Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -109,10 +86,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   children: [
                     Text(
                       "Confirm Password",
-                      style: TextStyle(
-                          color: Color(0xFFCD5638),
-                          fontSize: 16
-                      ),
+                      style: TextStyle(color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ],
                 ),
@@ -122,29 +96,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: const InputDecoration(
-                    labelText: 'Confirm Password',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0xFFCD5638)
-                        )
-                    )
-                  ),
+                      labelText: 'Confirm Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638)))),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -160,10 +117,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 const Text(
                   "Enter your new password and confirm",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Color(0xFF727171),
-                      fontSize: 16
-                  ),
+                  style: TextStyle(color: Color(0xFF727171), fontSize: 16),
                 ),
                 const SizedBox(height: 120),
                 SizedBox(
@@ -171,18 +125,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: ElevatedButton(
                     onPressed: _resetPassword,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFCD5638),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10
-                      )
-                    ),
+                        backgroundColor: const Color(0xFFCD5638),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
                     child: const Text(
                       'Reset Password',
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ),

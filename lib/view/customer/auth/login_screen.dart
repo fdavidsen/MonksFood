@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/auth_utils.dart';
-import 'package:monk_food/database/customer_handler.dart';
-import 'package:monk_food/view/auth/forgot_password_screen.dart';
-import 'package:monk_food/view/auth/signup_screen.dart';
-import 'package:monk_food/view/home.dart';
+import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/customer/auth/forgot_password_screen.dart';
+import 'package:monk_food/view/customer/auth/signup_screen.dart';
+import 'package:monk_food/view/customer/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
