@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/view/customer/auth/login_screen.dart';
+import 'package:monk_food/view/driver/auth/login_screen.dart';
 
 class ChooseIdentity extends StatelessWidget {
   const ChooseIdentity({super.key});
@@ -28,7 +29,9 @@ class ChooseIdentity extends StatelessWidget {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.65,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DriverLoginScreen()));
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFCD5638),
                     foregroundColor: Colors.white,
@@ -49,7 +52,7 @@ class ChooseIdentity extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.65,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const CustomerLoginScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFCD5638),

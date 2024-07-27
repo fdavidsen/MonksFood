@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/auth_utils.dart';
-import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/forgot_password_screen.dart';
-import 'package:monk_food/view/customer/auth/signup_screen.dart';
+import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/view/driver/auth/forgot_password_screen.dart';
+import 'package:monk_food/view/driver/auth/signup_screen.dart';
 import 'package:monk_food/view/customer/home.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class DriverLoginScreen extends StatefulWidget {
+  const DriverLoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _DriverLoginScreenState createState() => _DriverLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _DriverLoginScreenState extends State<DriverLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final username = _usernameController.text;
       final password = _passwordController.text;
 
-      final user = await CustomerHandler().login(username, password);
+      final user = await DriverHandler().login(username, password);
       if (user != null) {
         print(user);
         await saveLoginState(true);

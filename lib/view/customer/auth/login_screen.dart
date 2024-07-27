@@ -5,14 +5,14 @@ import 'package:monk_food/view/customer/auth/forgot_password_screen.dart';
 import 'package:monk_food/view/customer/auth/signup_screen.dart';
 import 'package:monk_food/view/customer/home.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class CustomerLoginScreen extends StatefulWidget {
+  const CustomerLoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _CustomerLoginScreenState createState() => _CustomerLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();

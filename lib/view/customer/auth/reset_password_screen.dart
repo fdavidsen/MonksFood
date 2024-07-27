@@ -23,7 +23,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password reset successful')));
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const CustomerLoginScreen()),
         (route) => false,
       );
     }

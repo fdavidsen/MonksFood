@@ -2,7 +2,6 @@ import 'package:monk_food/model/db_manager.dart';
 import 'package:monk_food/model/customer_model.dart';
 import 'package:monk_food/model/menu_model.dart';
 import 'package:monk_food/model/store_model.dart';
-import 'package:sqflite/sqflite.dart';
 
 class CustomerHandler {
   final String tableCustomers = DBManager.instance.tableCustomers;

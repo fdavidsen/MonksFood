@@ -1,5 +1,3 @@
-import 'package:monk_food/model/menu_model.dart';
-import 'package:monk_food/model/store_model.dart';
 import 'package:monk_food/controller/data_importer.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -44,7 +42,15 @@ class DBManager {
             username TEXT,
             email TEXT,
             phone TEXT,
-            password TEXT
+            password TEXT,
+            profilePicture TEXT,
+            driverLicenseFront TEXT,
+            driverLicenseBack TEXT,
+            certificate TEXT,
+            bankId TEXT,
+            bankFirstName TEXT,
+            bankLastName TEXT,
+            bankPhone TEXT
           );
         ''');
 
@@ -72,6 +78,8 @@ class DBManager {
             time TEXT
           );
         ''');
+
+        DataImporter.importStoreAndMenuData();
       },
       version: databaseVersion,
     );
@@ -92,7 +100,6 @@ class DBManager {
 
   Future<List<Map<String, Object?>>> login(String table, String username, String password) async {
     final db = await database;
-
     final result = await db.query(
       table,
       where: 'username = ? AND password = ?',
@@ -123,7 +130,6 @@ class DBManager {
 
   Future<List<Map<String, Object?>>> getUserByEmail(String table, String email) async {
     final db = await database;
-
     final result = await db.query(
       table,
       where: 'email = ?',

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/terms_and_conditions_screen.dart';
+import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/view/driver/auth/terms_and_conditions_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -26,8 +26,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final phone = _phoneController.text;
       final password = _passwordController.text;
 
-      bool isUsernameUnique = await CustomerHandler().isUsernameUnique(username);
-      bool isEmailExisted = await CustomerHandler().isEmailExisted(email);
+      bool isUsernameUnique = await DriverHandler().isUsernameUnique(username);
+      bool isEmailExisted = await DriverHandler().isEmailExisted(email);
 
       if (!isUsernameUnique) {
         setState(() {
@@ -44,7 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
 
       if (_checkBoxTerms == true) {
-        await CustomerHandler().register({
+        await DriverHandler().register({
           'username': username,
           'email': email,
           'phone': phone,
