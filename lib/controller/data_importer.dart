@@ -8,7 +8,6 @@ class DataImporter {
     var bytes = data.buffer.asUint8List();
     var excel = Excel.decodeBytes(bytes);
 
-    // Import stores
     var storeSheet = excel['store'];
     List<Map<String, dynamic>> storeItems = [];
     for (var row in storeSheet.rows.skip(1)) {
@@ -21,7 +20,6 @@ class DataImporter {
     }
     await DBManager.instance.insertMany(DBManager.instance.tableStore, storeItems);
 
-    // Import menus
     var menuSheet = excel['menu'];
     List<Map<String, dynamic>> menuItems = [];
     for (var row in menuSheet.rows.skip(1)) {

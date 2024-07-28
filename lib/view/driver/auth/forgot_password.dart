@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
-import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/otp_verification_screen.dart';
+import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/view/driver/auth/otp_verification.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -18,7 +18,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
 
-      final emailExists = await CustomerHandler().isEmailExisted(email);
+      final emailExists = await DriverHandler().isEmailExisted(email);
       if (emailExists) {
         await EmailOTP.sendOTP(email: email);
         Navigator.push(

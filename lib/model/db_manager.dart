@@ -42,15 +42,7 @@ class DBManager {
             username TEXT,
             email TEXT,
             phone TEXT,
-            password TEXT,
-            profilePicture TEXT,
-            driverLicenseFront TEXT,
-            driverLicenseBack TEXT,
-            certificate TEXT,
-            bankId TEXT,
-            bankFirstName TEXT,
-            bankLastName TEXT,
-            bankPhone TEXT
+            password TEXT
           );
         ''');
 
@@ -78,7 +70,6 @@ class DBManager {
             time TEXT
           );
         ''');
-
         DataImporter.importStoreAndMenuData();
       },
       version: databaseVersion,
@@ -100,6 +91,7 @@ class DBManager {
 
   Future<List<Map<String, Object?>>> login(String table, String username, String password) async {
     final db = await database;
+
     final result = await db.query(
       table,
       where: 'username = ? AND password = ?',
@@ -130,6 +122,7 @@ class DBManager {
 
   Future<List<Map<String, Object?>>> getUserByEmail(String table, String email) async {
     final db = await database;
+
     final result = await db.query(
       table,
       where: 'email = ?',

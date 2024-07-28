@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/login_screen.dart';
+import 'package:monk_food/view/customer/auth/login.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
@@ -23,7 +23,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password reset successful')));
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const CustomerLoginScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false,
       );
     }

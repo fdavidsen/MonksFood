@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
+import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/controller/data_importer.dart';
 import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/customer/insurance.dart';
+import 'package:monk_food/view/customer/my_account.dart';
+import 'package:monk_food/view/customer/my_card.dart';
+import 'package:monk_food/view/customer/stores.dart';
+import 'package:monk_food/view/customer/support.dart';
 import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class CustomerHomePage extends StatefulWidget {
+  const CustomerHomePage({super.key});
+
+  @override
+  _CustomerHomePageState createState() => _CustomerHomePageState();
+}
+
+class _CustomerHomePageState extends State<CustomerHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    await Provider.of<CustomerAuthProvider>(context, listen: false).loadUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +53,7 @@ class HomePage extends StatelessWidget {
               Icons.location_on,
               color: Colors.white,
             ),
-            title: Text("${"The Majestic Hotel Kuala Lumpur".substring(0, 30)} ..."),
+            title: Text("The Majestic Hotel Kuala Lumpur"),
             titleTextStyle: GoogleFonts.josefinSans(
               textStyle: const TextStyle(color: Colors.white),
             )),
@@ -56,10 +78,11 @@ class HomePage extends StatelessWidget {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -131,6 +154,128 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Stores Near You",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'More',
+                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: FutureBuilder(
+                    future: CustomerHandler().getAllStores(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('No stores found'));
+                      }
+
+                      final stores = snapshot.data!;
+                      stores.shuffle();
+                      return FutureBuilder(
+                          future: CustomerHandler().getAllMenu(),
+                          builder: (context, snapshot2) {
+                            if (snapshot2.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot2.hasError) {
+                              return Center(child: Text('Error: ${snapshot2.error}'));
+                            } else if (!snapshot2.hasData || snapshot2.data!.isEmpty) {
+                              return const Center(child: Text('No stores found'));
+                            }
+                            final menus = snapshot2.data!;
+
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: stores.map((e) {
+                                final storeMenus = menus.where((menu) => menu.storeId == e.id).toList();
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => StoresPage(
+                                              store: e,
+                                              menus: storeMenus,
+                                            )));
+                                  },
+                                  child: Hero(
+                                    tag: e.id,
+                                    child: Container(
+                                      width: 270,
+                                      height: 160,
+                                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(image: NetworkImage(e.image), fit: BoxFit.cover),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.black.withOpacity(0.7),
+                                              ],
+                                              stops: const [0.0, 0.7],
+                                            ),
+                                            borderRadius: BorderRadius.circular(10)),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                e.name,
+                                                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                e.category,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          });
+                    }),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Recommended",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'More',
+                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
               FutureBuilder(
                   future: CustomerHandler().getAllMenu(),
                   builder: (context, snapshot) {
@@ -143,21 +288,34 @@ class HomePage extends StatelessWidget {
                     }
 
                     final menus = snapshot.data!;
+                    menus.shuffle();
+                    final limitedMenus = menus.take(5).toList();
+                    limitedMenus.sort((a, b) => b.rating.compareTo(a.rating));
                     return ListView.builder(
-                      itemCount: menus.length,
+                      itemCount: limitedMenus.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final menu = menus[index];
+                        final menu = limitedMenus[index];
                         return ListTile(
                           title: Text(menu.name),
                           subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
                           isThreeLine: true,
-                          leading: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(image: NetworkImage(menu.image), fit: BoxFit.cover), borderRadius: BorderRadius.circular(10)),
+                          leading: Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.transparent,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                        menu.image,
+                                      ),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
                           ), // Assume image is a URL
                         );
                       },
@@ -347,40 +505,56 @@ Widget SideDrawer(BuildContext context) {
                   Navigator.of(context).pop();
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.account_circle_outlined, color: Color(0xFFFFFEF2)),
                 title: Text(
                   "My Account",
                   style: TextStyle(color: Color(0xFFFFFEF2)),
                 ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyAccountPage()));
+                },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.mode_comment_outlined, color: Color(0xFFFFFEF2)),
                 title: Text(
                   "Support",
                   style: TextStyle(color: Color(0xFFFFFEF2)),
                 ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SupportPage()));
+                },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.credit_card, color: Color(0xFFFFFEF2)),
                 title: Text(
                   "My Card",
                   style: TextStyle(color: Color(0xFFFFFEF2)),
                 ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyCardPage()));
+                },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.shield_outlined, color: Color(0xFFFFFEF2)),
                 title: Text(
                   "Insurance",
                   style: TextStyle(color: Color(0xFFFFFEF2)),
                 ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => InsurancePage()));
+                },
               ),
             ],
           ),
         ),
         ElevatedButton(
           onPressed: () async {
-            await saveLoginState(false);
+            await saveLoginRole('none');
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ChooseIdentity()));
           },
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),

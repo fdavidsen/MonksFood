@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/model/driver_handler.dart';
-import 'package:monk_food/view/driver/auth/terms_and_conditions_screen.dart';
+import 'package:monk_food/view/driver/auth/terms_and_conditions.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

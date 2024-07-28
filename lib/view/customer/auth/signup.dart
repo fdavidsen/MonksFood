@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/terms_and_conditions_screen.dart';
+import 'package:monk_food/view/customer/auth/terms_and_conditions.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monk_food/view/customer/auth/reset_password_screen.dart';
+import 'package:monk_food/view/driver/auth/reset_password.dart';
 import 'package:email_otp/email_otp.dart';
 
 class OTPVerificationScreen extends StatefulWidget {

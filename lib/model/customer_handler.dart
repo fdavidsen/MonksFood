@@ -24,6 +24,16 @@ class CustomerHandler {
     });
   }
 
+  Future<int> updateCustomer(Customer customer) async {
+    final db = await DBManager.instance.database;
+    return await db.update(
+      tableCustomers,
+      customer.toMap(),
+      where: 'id = ?',
+      whereArgs: [customer.id],
+    );
+  }
+
   Future<int> register(Map<String, dynamic> user) async {
     return await DBManager.instance.register(
       tableCustomers,

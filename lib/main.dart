@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monk_food/controller/auth_utils.dart';
+import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/view/customer/home.dart';
+import 'package:monk_food/view/customer/my_account.dart';
+import 'package:monk_food/view/customer/my_card.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';
-import 'controller/auth_utils.dart';
 import 'controller/data_importer.dart';
 import 'model/db_manager.dart';
 
@@ -12,14 +15,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DBManager.instance.initDB();
   await DataImporter.importStoreAndMenuData();
-  bool isLoggedIn = await getLoginState();
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  String loginRole = await getLoginRole();
+  runApp(MyApp(loginRole: loginRole));
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-
-  const MyApp({super.key, required this.isLoggedIn});
+  final String loginRole;
+  const MyApp({super.key, required this.loginRole});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => OnboardController()),
         ChangeNotifierProvider(create: (context) => BottomNavController()),
+        ChangeNotifierProvider(create: (context) => EditController()),
+        ChangeNotifierProvider(create: (context) => CardController()),
+        ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
       ],
       child: MaterialApp(
         title: 'Monk\'s Food',
@@ -36,7 +41,11 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.josefinSansTextTheme(),
           useMaterial3: true,
         ),
-        home: isLoggedIn ? HomePage() : const LaunchPage(),
+        home: loginRole == 'customer'
+            ? const CustomerHomePage()
+            : loginRole == 'driver'
+                ? const CustomerHomePage()
+                : const LaunchPage(),
       ),
     );
   }

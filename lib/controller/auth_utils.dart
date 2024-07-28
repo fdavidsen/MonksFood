@@ -1,11 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> saveLoginState(bool isLoggedIn) async {
+Future<void> saveLoginRole(String loggedInAs) async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('isLoggedIn', isLoggedIn);
+  await prefs.setString('loggedInAs', loggedInAs);
 }
 
-Future<bool> getLoginState() async {
+Future<String> getLoginRole() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('isLoggedIn') ?? false;
+  return prefs.getString('loggedInAs') ?? 'none';
 }

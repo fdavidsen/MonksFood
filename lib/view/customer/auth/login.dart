@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/auth_utils.dart';
+import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/model/customer_handler.dart';
-import 'package:monk_food/view/customer/auth/forgot_password_screen.dart';
-import 'package:monk_food/view/customer/auth/signup_screen.dart';
+import 'package:monk_food/view/customer/auth/forgot_password.dart';
+import 'package:monk_food/view/customer/auth/signup.dart';
 import 'package:monk_food/view/customer/home.dart';
+import 'package:provider/provider.dart';
 
-class CustomerLoginScreen extends StatefulWidget {
-  const CustomerLoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  _CustomerLoginScreenState createState() => _CustomerLoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -24,10 +26,10 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
 
       final user = await CustomerHandler().login(username, password);
       if (user != null) {
-        print(user);
-        await saveLoginState(true);
+        await saveLoginRole('customer');
+        Provider.of<CustomerAuthProvider>(context, listen: false).setUser(user);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login successful')));
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CustomerHomePage()));
       } else {
         // Login failed, show error message
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid credentials')));
