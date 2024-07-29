@@ -168,7 +168,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                     child: const Text(
                       'Sign up',
                       style:
-                          TextStyle(decoration: TextDecoration.underline, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
+                      TextStyle(decoration: TextDecoration.underline, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ),
                 ],

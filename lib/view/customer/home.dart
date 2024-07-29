@@ -4,11 +4,14 @@ import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/controller/data_importer.dart';
 import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/view/customer/checkout.dart';
 import 'package:monk_food/view/customer/insurance.dart';
 import 'package:monk_food/view/customer/my_account.dart';
 import 'package:monk_food/view/customer/my_card.dart';
+import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/customer/stores.dart';
 import 'package:monk_food/view/customer/support.dart';
+import 'package:monk_food/view/customer/view_order.dart';
 import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
 
@@ -297,30 +300,41 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final menu = limitedMenus[index];
-                        return ListTile(
-                          title: Text(menu.name),
-                          subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
-                          isThreeLine: true,
-                          leading: Material(
-                            elevation: 4,
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.transparent,
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
+                        return Card(
+                          color: Color(0xFFFFFEF2),
+                          elevation: 4,
+                          child: ListTile(
+                            titleAlignment: ListTileTitleAlignment.center,
+                            title: Text(menu.name),
+                            subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
+                            isThreeLine: true,
+                            leading: Material(
+                              elevation: 4,
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.transparent,
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: NetworkImage(
-                                        menu.image,
-                                      ),
-                                      fit: BoxFit.cover),
+                                    image: NetworkImage(
+                                      menu.image,
+                                    ),
+                                    fit: BoxFit.cover),
                                   borderRadius: BorderRadius.circular(10)),
+                              ),
                             ),
-                          ), // Assume image is a URL
+                            onTap: (){
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => OrderPage(menu: menu))
+                              );
+                            },// Assume image is a URL
+                          ),
                         );
                       },
                     );
-                  })
+                  }),
+              SizedBox(height: 10)
             ],
           ),
         ),
@@ -397,25 +411,81 @@ Widget CartDrawer(BuildContext context) {
           ),
         ),
         Expanded(
-          child: ListView(
+          child: ListView.builder(
+            itemCount: Provider.of<CartController>(context).cart.isEmpty ? 1 : Provider.of<CartController>(context).cart.length,
             shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              ListTile(
-                title: Text(
-                  "your cart is empty",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFFFFFEF2)),
-                ),
-              )
-            ],
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            itemBuilder: (context, index){
+              if(Provider.of<CartController>(context).cart.isEmpty){
+                return ListTile(
+                  title: Text(
+                    "your cart is empty",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Color(0xFFFFFEF2)),
+                  ),
+                );
+              }
+              else{
+                var item = Provider.of<CartController>(context).cart;
+                return Card(
+                  color: Color(0xFFFFFEF2),
+                  elevation: 4,
+                  child: ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
+                    contentPadding: EdgeInsets.only(left: 10),
+                    title: Text(item[index]["menu"].name),
+                    subtitle: Text("RM ${item[index]["menu"].price}  ${item[index]["menu"].time} mins\nAmount: ${item[index]["qty"]}"),
+                    isThreeLine: true,
+                    leading: Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.transparent,
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                  item[index]["menu"].image,
+                                ),
+                                fit: BoxFit.cover
+                            ),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.cancel_rounded),
+                      color: Color(0xFFCD5638),
+                      onPressed: (){
+                        Provider.of<CartController>(context, listen: false).removeCart(item[index]);
+                      },
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
-        ElevatedButton(
+        const SizedBox(height: 15),
+        Visibility(
+          visible: Provider.of<CartController>(context).cart.isNotEmpty,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CheckoutPage())
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
+            child: const Text("Checkout"),
+          ),
+        ),
+        const SizedBox(height: 15),
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
+          style: ElevatedButton.styleFrom(foregroundColor: const Color(0xFFFFFEF2)),
           child: const Text("Explore More"),
         ),
         const SizedBox(height: 15)
@@ -444,20 +514,47 @@ Widget OrderDrawer(BuildContext context) {
           ),
         ),
         Expanded(
-          child: ListView(
+          child: ListView.builder(
+            itemCount: Provider.of<OrderController>(context).order.isEmpty ? 1 : Provider.of<OrderController>(context).order.length,
             shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              ListTile(
-                title: Text(
-                  "checkout for some order",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFFFFFEF2)),
-                ),
-              )
-            ],
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            itemBuilder: (context, index){
+              if(Provider.of<OrderController>(context).order.isEmpty){
+                return ListTile(
+                  title: Text(
+                    "checkout for some order",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Color(0xFFFFFEF2)),
+                  ),
+                );
+              }
+              else{
+                var item = Provider.of<OrderController>(context).order;
+                return Card(
+                  color: Color(0xFFFFFEF2),
+                  elevation: 4,
+                  child: ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
+                    contentPadding: EdgeInsets.only(left: 10),
+                    title: Text("Order Number:"),
+                    subtitle: Text("${item[index]["id"]}\nSubtotal: RM ${item[index]["subtotal"].toStringAsFixed(2)}"),
+                    isThreeLine: true,
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_circle_right),
+                      color: Color(0xFFCD5638),
+                      onPressed: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ViewOrderPage(myOrder: item[index]))
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
+        const SizedBox(height: 15),
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -555,7 +652,6 @@ Widget SideDrawer(BuildContext context) {
         ElevatedButton(
           onPressed: () async {
             await saveLoginRole('none');
-            Provider.of<CustomerAuthProvider>(context, listen: false).unsetUser();
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ChooseIdentity()));
           },
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
@@ -572,6 +668,42 @@ class BottomNavController extends ChangeNotifier {
 
   void changeIndex(int index) {
     selected = index;
+    notifyListeners();
+  }
+}
+
+class CartController extends ChangeNotifier{
+  List<Map<String, dynamic>> cart = [];
+
+  void addCart(Map<String, dynamic> item){
+    cart.add(item);
+    notifyListeners();
+  }
+
+  void removeCart(Map<String, dynamic> item){
+    cart.remove(item);
+    notifyListeners();
+  }
+
+  void clearCart(){
+    cart = [];
+    notifyListeners();
+  }
+
+  double calculateTotal(){
+    double total = 0;
+    for(var item in cart){
+      total += (item["menu"].price * item["qty"]);
+    }
+    return total;
+  }
+}
+
+class OrderController extends ChangeNotifier{
+  List<Map<String, dynamic>> order = [];
+
+  void addOrder(Map<String, dynamic> item){
+    order.add(item);
     notifyListeners();
   }
 }

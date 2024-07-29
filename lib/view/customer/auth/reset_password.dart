@@ -24,7 +24,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const CustomerLoginScreen()),
-        (route) => false,
+            (route) => false,
       );
     }
   }

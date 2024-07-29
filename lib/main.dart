@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
+import 'package:monk_food/view/customer/checkout.dart';
 import 'package:monk_food/view/customer/home.dart';
 import 'package:monk_food/view/customer/my_account.dart';
 import 'package:monk_food/view/customer/my_card.dart';
+import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => EditController()),
         ChangeNotifierProvider(create: (context) => CardController()),
         ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
+        ChangeNotifierProvider(create: (context) => CartController()),
+        ChangeNotifierProvider(create: (context) => ChipSelectionController()),
+        ChangeNotifierProvider(create: (context) => CounterController()),
+        ChangeNotifierProvider(create: (context) => PaymentController()),
+        ChangeNotifierProvider(create: (context) => OfferController()),
+        ChangeNotifierProvider(create: (context) => OrderController()),
       ],
       child: MaterialApp(
         title: 'Monk\'s Food',
@@ -44,8 +52,8 @@ class MyApp extends StatelessWidget {
         home: loginRole == 'customer'
             ? const CustomerHomePage()
             : loginRole == 'driver'
-                ? const CustomerHomePage()
-                : const LaunchPage(),
+            ? const CustomerHomePage()
+            : const LaunchPage(),
       ),
     );
   }

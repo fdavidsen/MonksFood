@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/model/menu_model.dart';
 import 'package:monk_food/model/store_model.dart';
+import 'package:monk_food/view/customer/order.dart';
 
 class StoresPage extends StatelessWidget {
   final Store store;
@@ -83,65 +84,67 @@ class StoresPage extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: popularItems.map((e){
-                        return Container(
-                          margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                          width: 100,
-                          height: 220,
-                          child: Material(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                            ),
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => OrderPage(menu: e))
+                            );
+                          },
+                          child: Card(
                             color: Color(0xFFFFFEF2),
                             elevation: 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(e.image),
-                                      fit: BoxFit.cover
+                            margin: EdgeInsets.only(right: 10, bottom: 10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              width: 100,
+                              height: 250,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(e.image),
+                                        fit: BoxFit.cover
+                                      ),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10)
+                                      )
                                     ),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)
-                                    )
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Text(
-                                    e.name
+                                  Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Text(
+                                      e.name
+                                    ),
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Text(
-                                        "RM ${e.price}",
-                                        style: TextStyle(
-                                          color: Color(0xFFCD5638)
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: Text(
+                                          "RM ${e.price}",
+                                          style: TextStyle(
+                                            color: Color(0xFFCD5638)
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Text(
+                                      Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: Text(
                                           "⭐ ${e.rating}"
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -170,30 +173,41 @@ class StoresPage extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               final menu = categorizedMenus[e]![index];
-                              return ListTile(
-                                title: Text(menu.name),
-                                subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
-                                isThreeLine: true,
-                                leading: Material(
-                                  elevation: 4,
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.transparent,
-                                  child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        menu.image,
+                              return Card(
+                                color: Color(0xFFFFFEF2),
+                                elevation: 4,
+                                child: ListTile(
+                                  titleAlignment: ListTileTitleAlignment.center,
+                                  title: Text(menu.name),
+                                  subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
+                                  isThreeLine: true,
+                                  leading: Material(
+                                    elevation: 4,
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.transparent,
+                                    child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          menu.image,
+                                        ),
+                                        fit: BoxFit.cover
                                       ),
-                                      fit: BoxFit.cover
+                                      borderRadius: BorderRadius.circular(10)),
                                     ),
-                                    borderRadius: BorderRadius.circular(10)),
                                   ),
-                                ), // Assume image is a URL
+                                  onTap: (){
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) => OrderPage(menu: menu))
+                                    );
+                                  },
+                                ),
                               );
                             },
-                          )
+                          ),
+                          SizedBox(height: 20)
                         ],
                       );
                     }).toList(),
