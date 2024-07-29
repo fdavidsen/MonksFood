@@ -17,6 +17,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  String _errorMessage = '';
 
   late Customer customer;
   late Future<void> _loadUserFuture;
@@ -39,7 +40,26 @@ class _MyAccountPageState extends State<MyAccountPage> {
   }
 
   Future<void> _updateUserData() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      if (_usernameController.text != customer.username) {
+        bool isUsernameUnique = await CustomerHandler().isUsernameUnique(_usernameController.text);
+        if (!isUsernameUnique) {
+          setState(() {
+            _errorMessage = 'Username already exists';
+          });
+          return;
+        }
+      }
+      if (_emailController.text != customer.email) {
+        bool isEmailExisted = await CustomerHandler().isEmailExisted(_emailController.text);
+        if (isEmailExisted) {
+          setState(() {
+            _errorMessage = 'Email already exists';
+          });
+          return;
+        }
+      }
+
       final updatedCustomer = Customer(
         id: customer.id,
         username: _usernameController.text,
@@ -48,7 +68,8 @@ class _MyAccountPageState extends State<MyAccountPage> {
         password: _passwordController.text,
       );
 
-      await CustomerHandler().updateCustomer(updatedCustomer);
+      customer = updatedCustomer;
+      await CustomerHandler().updateMyAccount(updatedCustomer);
       Provider.of<CustomerAuthProvider>(context, listen: false).setUser(updatedCustomer);
       Provider.of<EditController>(context, listen: false).changeMode();
     }
@@ -77,6 +98,11 @@ class _MyAccountPageState extends State<MyAccountPage> {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
+                      if (_errorMessage.isNotEmpty)
+                        Text(
+                          _errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
                       const Text(
                         "My Account",
                         style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
@@ -86,7 +112,14 @@ class _MyAccountPageState extends State<MyAccountPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              Provider.of<EditController>(context, listen: false).changeMode();
+                              if (Provider.of<EditController>(context, listen: false).isEditing) {
+                                _updateUserData();
+                              } else {
+                                Provider.of<EditController>(context, listen: false).changeMode();
+                              }
+                              setState(() {
+                                _errorMessage = '';
+                              });
                             },
                             icon: Icon(
                               Provider.of<EditController>(context).isEditing ? Icons.check : Icons.edit,

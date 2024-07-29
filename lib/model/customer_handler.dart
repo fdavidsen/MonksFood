@@ -24,7 +24,7 @@ class CustomerHandler {
     });
   }
 
-  Future<int> updateCustomer(Customer customer) async {
+  Future<int> updateMyAccount(Customer customer) async {
     final db = await DBManager.instance.database;
     return await db.update(
       tableCustomers,
