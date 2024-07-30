@@ -50,6 +50,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
           return;
         }
       }
+
       if (_emailController.text != customer.email) {
         bool isEmailExisted = await CustomerHandler().isEmailExisted(_emailController.text);
         if (isEmailExisted) {

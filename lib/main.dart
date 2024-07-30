@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
+import 'package:monk_food/controller/data_importer.dart';
+import 'package:monk_food/model/db_manager.dart';
 import 'package:monk_food/view/customer/checkout.dart';
 import 'package:monk_food/view/customer/home.dart';
-import 'package:monk_food/view/customer/my_account.dart';
-import 'package:monk_food/view/customer/my_card.dart';
+import 'package:monk_food/view/customer/drawer/my_account.dart';
+import 'package:monk_food/view/customer/drawer/my_card.dart';
 import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';
-import 'controller/data_importer.dart';
-import 'model/db_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,8 +52,8 @@ class MyApp extends StatelessWidget {
         home: loginRole == 'customer'
             ? const CustomerHomePage()
             : loginRole == 'driver'
-            ? const CustomerHomePage()
-            : const LaunchPage(),
+                ? const CustomerHomePage()
+                : const LaunchPage(),
       ),
     );
   }

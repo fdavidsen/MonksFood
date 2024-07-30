@@ -7,8 +7,10 @@ class DBManager {
   final String tableDrivers = 'drivers';
   final String tableStore = 'store';
   final String tableMenu = 'menu';
+  final String tableCart = 'cart';
+  final String tableOrders = 'orders';
   final String databaseName = 'monks_food.db';
-  final int databaseVersion = 1;
+  final int databaseVersion = 2;
 
   static final DBManager instance = DBManager._init();
   static Database? _database;
@@ -70,6 +72,32 @@ class DBManager {
             time TEXT
           );
         ''');
+
+        await db.execute('''
+          CREATE TABLE $tableCart (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER,
+            menu_id INTEGER,
+            qty INTEGER,
+            selected_ice_hot TEXT,
+            is_active BOOLEAN
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE $tableOrders (
+            id TEXT PRIMARY KEY,
+            user_id INTEGER,
+            cart_item_ids TEXT,
+            subtotal REAL,
+            delivery_fee REAL,
+            order_fee REAL,
+            coupon_offer TEXT,
+            offer_fee REAL,
+            payment_method TEXT
+          )
+        ''');
+
         DataImporter.importStoreAndMenuData();
       },
       version: databaseVersion,
@@ -91,7 +119,6 @@ class DBManager {
 
   Future<List<Map<String, Object?>>> login(String table, String username, String password) async {
     final db = await database;
-
     final result = await db.query(
       table,
       where: 'username = ? AND password = ?',
@@ -120,9 +147,18 @@ class DBManager {
     return result.isNotEmpty;
   }
 
+  Future<List<Map<String, Object?>>> getUserById(String table, int id) async {
+    final db = await database;
+    final result = await db.query(
+      table,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result;
+  }
+
   Future<List<Map<String, Object?>>> getUserByEmail(String table, String email) async {
     final db = await database;
-
     final result = await db.query(
       table,
       where: 'email = ?',
@@ -131,7 +167,7 @@ class DBManager {
     return result;
   }
 
-  Future<int> updatePassword(String table, String email, String newPassword) async {
+  Future<int> updateForgetPassword(String table, String email, String newPassword) async {
     final db = await database;
     return await db.update(
       table,

@@ -18,13 +18,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   Future<void> _resetPassword() async {
     if (_formKey.currentState!.validate()) {
-      await CustomerHandler().updatePassword(widget.email, _passwordController.text);
+      await CustomerHandler().updateForgetPassword(widget.email, _passwordController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password reset successful')));
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const CustomerLoginScreen()),
-            (route) => false,
+        (route) => false,
       );
     }
   }

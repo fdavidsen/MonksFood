@@ -3,14 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/controller/data_importer.dart';
+import 'package:monk_food/model/cart_item_model.dart';
 import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/model/customer_model.dart';
+import 'package:monk_food/model/order_modal.dart';
 import 'package:monk_food/view/customer/checkout.dart';
-import 'package:monk_food/view/customer/insurance.dart';
-import 'package:monk_food/view/customer/my_account.dart';
-import 'package:monk_food/view/customer/my_card.dart';
+import 'package:monk_food/view/customer/drawer/insurance.dart';
+import 'package:monk_food/view/customer/drawer/my_account.dart';
+import 'package:monk_food/view/customer/drawer/my_card.dart';
 import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/customer/stores.dart';
-import 'package:monk_food/view/customer/support.dart';
+import 'package:monk_food/view/customer/drawer/support.dart';
 import 'package:monk_food/view/customer/view_order.dart';
 import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
@@ -24,15 +27,20 @@ class CustomerHomePage extends StatefulWidget {
 
 class _CustomerHomePageState extends State<CustomerHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Customer user;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadUserData();
+    _loadData();
   }
 
-  Future<void> _loadUserData() async {
-    await Provider.of<CustomerAuthProvider>(context, listen: false).loadUser();
+  Future<void> _loadData() async {
+    final customerAuthProvider = Provider.of<CustomerAuthProvider>(context, listen: false);
+    await customerAuthProvider.loadUser();
+    user = customerAuthProvider.user!;
+    Provider.of<CartController>(context, listen: false)._loadCart(user.id);
+    Provider.of<OrderController>(context, listen: false)._loadOrder(user.id);
   }
 
   @override
@@ -316,19 +324,17 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      menu.image,
-                                    ),
-                                    fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.circular(10)),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                          menu.image,
+                                        ),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                             ),
-                            onTap: (){
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => OrderPage(menu: menu))
-                              );
-                            },// Assume image is a URL
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderPage(menu: menu)));
+                            }, // Assume image is a URL
                           ),
                         );
                       },
@@ -415,8 +421,8 @@ Widget CartDrawer(BuildContext context) {
             itemCount: Provider.of<CartController>(context).cart.isEmpty ? 1 : Provider.of<CartController>(context).cart.length,
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 5),
-            itemBuilder: (context, index){
-              if(Provider.of<CartController>(context).cart.isEmpty){
+            itemBuilder: (context, index) {
+              if (Provider.of<CartController>(context).cart.isEmpty) {
                 return ListTile(
                   title: Text(
                     "your cart is empty",
@@ -424,8 +430,7 @@ Widget CartDrawer(BuildContext context) {
                     style: TextStyle(color: Color(0xFFFFFEF2)),
                   ),
                 );
-              }
-              else{
+              } else {
                 var item = Provider.of<CartController>(context).cart;
                 return Card(
                   color: Color(0xFFFFFEF2),
@@ -433,8 +438,8 @@ Widget CartDrawer(BuildContext context) {
                   child: ListTile(
                     titleAlignment: ListTileTitleAlignment.center,
                     contentPadding: EdgeInsets.only(left: 10),
-                    title: Text(item[index]["menu"].name),
-                    subtitle: Text("RM ${item[index]["menu"].price}  ${item[index]["menu"].time} mins\nAmount: ${item[index]["qty"]}"),
+                    title: Text(item[index].menu.name),
+                    subtitle: Text("RM ${item[index].menu.price}  ${item[index].menu.time} mins\nAmount: ${item[index].qty}"),
                     isThreeLine: true,
                     leading: Material(
                       elevation: 4,
@@ -446,18 +451,17 @@ Widget CartDrawer(BuildContext context) {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                  item[index]["menu"].image,
+                                  item[index].menu.image,
                                 ),
-                                fit: BoxFit.cover
-                            ),
+                                fit: BoxFit.cover),
                             borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.cancel_rounded),
                       color: Color(0xFFCD5638),
-                      onPressed: (){
-                        Provider.of<CartController>(context, listen: false).removeCart(item[index]);
+                      onPressed: () {
+                        Provider.of<CartController>(context, listen: false).removeCartItem(item[index]);
                       },
                     ),
                   ),
@@ -472,9 +476,7 @@ Widget CartDrawer(BuildContext context) {
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CheckoutPage())
-              );
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CheckoutPage()));
             },
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
             child: const Text("Checkout"),
@@ -518,8 +520,8 @@ Widget OrderDrawer(BuildContext context) {
             itemCount: Provider.of<OrderController>(context).order.isEmpty ? 1 : Provider.of<OrderController>(context).order.length,
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 5),
-            itemBuilder: (context, index){
-              if(Provider.of<OrderController>(context).order.isEmpty){
+            itemBuilder: (context, index) {
+              if (Provider.of<OrderController>(context).order.isEmpty) {
                 return ListTile(
                   title: Text(
                     "checkout for some order",
@@ -527,8 +529,7 @@ Widget OrderDrawer(BuildContext context) {
                     style: TextStyle(color: Color(0xFFFFFEF2)),
                   ),
                 );
-              }
-              else{
+              } else {
                 var item = Provider.of<OrderController>(context).order;
                 return Card(
                   color: Color(0xFFFFFEF2),
@@ -537,15 +538,13 @@ Widget OrderDrawer(BuildContext context) {
                     titleAlignment: ListTileTitleAlignment.center,
                     contentPadding: EdgeInsets.only(left: 10),
                     title: Text("Order Number:"),
-                    subtitle: Text("${item[index]["id"]}\nSubtotal: RM ${item[index]["subtotal"].toStringAsFixed(2)}"),
+                    subtitle: Text("${item[index].id}\nSubtotal: RM ${item[index].subtotal.toStringAsFixed(2)}"),
                     isThreeLine: true,
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_circle_right),
                       color: Color(0xFFCD5638),
-                      onPressed: (){
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => ViewOrderPage(myOrder: item[index]))
-                        );
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewOrderPage(myOrder: item[index])));
                       },
                     ),
                   ),
@@ -672,37 +671,52 @@ class BottomNavController extends ChangeNotifier {
   }
 }
 
-class CartController extends ChangeNotifier{
-  List<Map<String, dynamic>> cart = [];
+class CartController extends ChangeNotifier {
+  List<CartItem> cart = [];
 
-  void addCart(Map<String, dynamic> item){
+  Future<void> _loadCart(int userId) async {
+    cart = await CustomerHandler().getCartItems(userId);
+    notifyListeners();
+  }
+
+  void addCartItem(CartItem item) async {
+    await CustomerHandler().insertCartItem(item);
     cart.add(item);
     notifyListeners();
   }
 
-  void removeCart(Map<String, dynamic> item){
+  Future<void> removeCartItem(CartItem item) async {
+    await CustomerHandler().deleteCartItem(item.id!);
     cart.remove(item);
     notifyListeners();
   }
 
-  void clearCart(){
+  void clearCart(int userId) async {
+    await CustomerHandler().clearCart(userId);
     cart = [];
     notifyListeners();
   }
 
-  double calculateTotal(){
+  double calculateTotal() {
     double total = 0;
-    for(var item in cart){
-      total += (item["menu"].price * item["qty"]);
+    for (var item in cart) {
+      total += (item.menu.price * item.qty);
     }
     return total;
   }
 }
 
-class OrderController extends ChangeNotifier{
-  List<Map<String, dynamic>> order = [];
+class OrderController extends ChangeNotifier {
+  List<Order> order = [];
 
-  void addOrder(Map<String, dynamic> item){
+  Future<void> _loadOrder(int userId) async {
+    order = await CustomerHandler().getOrderList(userId);
+    notifyListeners();
+    print(order);
+  }
+
+  void addOrder(Order item) async {
+    await CustomerHandler().insertOrder(item);
     order.add(item);
     notifyListeners();
   }

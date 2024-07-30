@@ -18,7 +18,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   Future<void> _resetPassword() async {
     if (_formKey.currentState!.validate()) {
-      await DriverHandler().updatePassword(widget.email, _passwordController.text);
+      await DriverHandler().updateForgetPassword(widget.email, _passwordController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password reset successful')));
       Navigator.pushAndRemoveUntil(
