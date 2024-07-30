@@ -67,10 +67,15 @@ class _MyAccountPageState extends State<MyAccountPage> {
         email: _emailController.text,
         phone: _phoneController.text,
         password: _passwordController.text,
+        cardFirstName: customer.cardFirstName,
+        cardLastName: customer.cardLastName,
+        cardNumber: customer.cardNumber,
+        expirationDate: customer.expirationDate,
+        cvv: customer.cvv,
       );
 
       customer = updatedCustomer;
-      await CustomerHandler().updateMyAccount(updatedCustomer);
+      await CustomerHandler().updateCustomerData(updatedCustomer);
       Provider.of<CustomerAuthProvider>(context, listen: false).setUser(updatedCustomer);
       Provider.of<EditController>(context, listen: false).changeMode();
     }

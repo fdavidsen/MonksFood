@@ -185,17 +185,6 @@ class CheckoutPage extends StatelessWidget {
                     paymentMethod: Provider.of<PaymentController>(context, listen: false).method,
                     userId: Provider.of<CustomerAuthProvider>(context, listen: false).user!.id,
                   ));
-                  // Provider.of<OrderController>(context, listen: false).addOrder({
-                  //   "id":
-                  //       "${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}${Random().nextInt(10000).toString().padLeft(4, '0')}",
-                  //   "menu": orders,
-                  //   "subtotal": total,
-                  //   "delivery_fee": 2.5,
-                  //   "order_fee": 1,
-                  //   "offer": Provider.of<OfferController>(context, listen: false).offer,
-                  //   "offer_fee": Provider.of<OfferController>(context, listen: false).getOffer(),
-                  //   "method": Provider.of<PaymentController>(context, listen: false).method,
-                  // });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Your order is confirmed')));
                   Navigator.of(context).pop();
                   Provider.of<CartController>(context, listen: false).clearCart(Provider.of<CustomerAuthProvider>(context, listen: false).user!.id);

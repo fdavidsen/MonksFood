@@ -34,7 +34,12 @@ class DBManager {
             username TEXT,
             email TEXT,
             phone TEXT,
-            password TEXT
+            password TEXT,
+            card_first_name TEXT,
+            card_last_name TEXT,
+            card_number TEXT,
+            expiration_date TEXT,
+            cvv TEXT
           );
         ''');
 

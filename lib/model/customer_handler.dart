@@ -98,8 +98,8 @@ class CustomerHandler {
         menu.time as time 
       FROM cart 
       JOIN menu ON cart.menu_id = menu.id 
-      WHERE cart.id IN (?) 
-    ''', [ids]);
+      WHERE cart.id IN ($ids) 
+    ''');
 
     return List.generate(result.length, (i) {
       return CartItem.fromMap(result[i]);
@@ -128,7 +128,7 @@ class CustomerHandler {
     return orders;
   }
 
-  Future<int> updateMyAccount(Customer customer) async {
+  Future<int> updateCustomerData(Customer customer) async {
     final db = await DBManager.instance.database;
     return await db.update(
       tableCustomers,
