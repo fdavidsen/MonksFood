@@ -98,8 +98,8 @@ class CustomerHandler {
         menu.time as time 
       FROM cart 
       JOIN menu ON cart.menu_id = menu.id 
-      WHERE cart.id IN (?) 
-    ''', [ids]);
+      WHERE cart.id IN ($ids) 
+    ''');
 
     return List.generate(result.length, (i) {
       return CartItem.fromMap(result[i]);
