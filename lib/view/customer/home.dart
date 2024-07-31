@@ -651,6 +651,7 @@ Widget SideDrawer(BuildContext context) {
         ElevatedButton(
           onPressed: () async {
             await saveLoginRole('none');
+            Provider.of<CustomerAuthProvider>(context, listen: false).unsetUser();
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ChooseIdentity()));
           },
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),

@@ -1,32 +1,32 @@
 class Driver {
-  int id;
+  int? id;
   String username;
   String email;
   String phone;
   String password;
-  String profilePicture;
-  String driverLicenseFront;
-  String driverLicenseBack;
-  String certificate;
-  String bankId;
-  String bankFirstName;
-  String bankLastName;
-  String bankPhone;
+  String? profilePicture;
+  String? driverLicenseFront;
+  String? driverLicenseBack;
+  String? certificate;
+  String? bankId;
+  String? bankFirstName;
+  String? bankLastName;
+  String? bankPhone;
 
   Driver({
-    required this.id,
     required this.username,
     required this.email,
     required this.phone,
     required this.password,
-    required this.profilePicture,
-    required this.driverLicenseFront,
-    required this.driverLicenseBack,
-    required this.certificate,
-    required this.bankId,
-    required this.bankFirstName,
-    required this.bankLastName,
-    required this.bankPhone,
+    this.id,
+    this.profilePicture,
+    this.driverLicenseFront,
+    this.driverLicenseBack,
+    this.certificate,
+    this.bankId,
+    this.bankFirstName,
+    this.bankLastName,
+    this.bankPhone,
   });
 
   factory Driver.fromMap(Map<String, dynamic> map) {
@@ -49,7 +49,6 @@ class Driver {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'username': username,
       'email': email,
       'phone': phone,

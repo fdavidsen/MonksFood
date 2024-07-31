@@ -29,6 +29,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     }
   }
 
+  void _resendOtp() async {
+    await EmailOTP.sendOTP(email: widget.email);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('OTP has been sent to your email')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +99,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                       style: TextStyle(color: Color(0xFF727171), fontSize: 16),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: _resendOtp,
                       style: TextButton.styleFrom(foregroundColor: const Color(0xFFCD5638)),
                       child: const Text(
                         'Resend',
