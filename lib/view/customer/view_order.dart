@@ -31,7 +31,7 @@ class ViewOrderPage extends StatelessWidget {
         mapToolbarEnabled: false,
         initialCameraPosition: kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
-          Provider.of<MapProvider>(context).setMapController(controller);
+          Provider.of<MapProvider>(context, listen: false).setMapController(controller);
         },
         polylines: Set<Polyline>.of(Provider.of<MapProvider>(context).polylines.values),
         markers: Provider.of<MapProvider>(context).markers.toSet(),
@@ -39,14 +39,9 @@ class ViewOrderPage extends StatelessWidget {
         myLocationButtonEnabled: true,
       ),
       bottomSheet: Container(
-        height: MediaQuery.of(context).size.height/3,
-        decoration: BoxDecoration(
-          color: Color(0xFFFFFEF2),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15)
-          )
-        ),
+        height: MediaQuery.of(context).size.height / 3,
+        decoration:
+            BoxDecoration(color: Color(0xFFFFFEF2), borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
@@ -77,8 +72,8 @@ class ViewOrderPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle:
-                        Text("Prep time estimation: ${item.menu.time} mins\nRM ${item.menu.price.toStringAsFixed(2)}   Note: ${item.menu.iceHot}"),
+                        subtitle: Text(
+                            "Prep time estimation: ${item.menu.time} mins\nRM ${item.menu.price.toStringAsFixed(2)}   Note: ${item.menu.iceHot}"),
                         isThreeLine: true,
                       ),
                     );
@@ -204,7 +199,7 @@ class MapProvider with ChangeNotifier {
 
   final String apiKey = 'AIzaSyCdIQnif6IpMKA-oUdYAox6RERXi76A6fs';
 
-  MapProvider(){
+  MapProvider() {
     addMarker(startLocation);
     addMarker(endLocation);
   }
