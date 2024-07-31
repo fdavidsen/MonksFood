@@ -51,9 +51,16 @@ class CustomerHandler {
         menu.tag as tag, 
         menu.category as category, 
         menu.rating as rating, 
-        menu.time as time 
+        menu.time as time,
+        store.id as store_id,
+        store.name as store_name,
+        store.image as store_image,
+        store.category as store_category,
+        store.latitude as store_latitude,
+        store.longitude as store_longitude 
       FROM cart 
       JOIN menu ON cart.menu_id = menu.id 
+      JOIN store ON menu.store_id = store.id
       WHERE cart.user_id = ? AND cart.is_active = 1
     ''', [userId]);
 
@@ -81,24 +88,31 @@ class CustomerHandler {
     final db = await DBManager.instance.database;
     final result = await db.rawQuery('''
       SELECT 
-        cart.id as cart_id, 
-        cart.user_id as user_id, 
-        cart.qty as qty, 
-        cart.selected_ice_hot as selected_ice_hot, 
-        menu.id as menu_id, 
-        menu.store_id as store_id, 
-        menu.name as menu_name, 
-        menu.description as description, 
-        menu.image as image, 
-        menu.ice_hot as menu_ice_hot, 
-        menu.price as price, 
-        menu.tag as tag, 
-        menu.category as category, 
-        menu.rating as rating, 
-        menu.time as time 
+          cart.id as cart_id, 
+          cart.user_id as user_id, 
+          cart.qty as qty, 
+          cart.selected_ice_hot as selected_ice_hot, 
+          menu.id as menu_id, 
+          menu.store_id as store_id, 
+          menu.name as menu_name, 
+          menu.description as description, 
+          menu.image as image, 
+          menu.ice_hot as menu_ice_hot, 
+          menu.price as price, 
+          menu.tag as tag, 
+          menu.category as category, 
+          menu.rating as rating, 
+          menu.time as time,
+          store.id as store_id,
+          store.name as store_name,
+          store.image as store_image,
+          store.category as store_category,
+          store.latitude as store_latitude,
+          store.longitude as store_longitude
       FROM cart 
       JOIN menu ON cart.menu_id = menu.id 
-      WHERE cart.id IN ($ids) 
+      JOIN store ON menu.store_id = store.id
+      WHERE cart.id IN ($ids)
     ''');
 
     return List.generate(result.length, (i) {

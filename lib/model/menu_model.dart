@@ -1,6 +1,9 @@
+import 'package:monk_food/model/store_model.dart';
+
 class Menu {
   int id;
   int storeId;
+  Store? store;
   String name;
   String description;
   String image;
@@ -12,6 +15,7 @@ class Menu {
   String time;
 
   Menu({
+    this.store,
     required this.id,
     required this.storeId,
     required this.name,
@@ -38,6 +42,7 @@ class Menu {
       category: map['category'],
       rating: map['rating'],
       time: map['time'],
+      store: map['store'],
     );
   }
 
@@ -59,6 +64,6 @@ class Menu {
 
   @override
   String toString() {
-    return 'Menu(id: $id, storeId: $storeId, name: $name, description: $description, image: $image, iceHot: $iceHot, price: $price, tag: $tag, category: $category, rating: $rating, time: $time)';
+    return 'Menu(id: $id, storeId: $storeId, storeName: ${store!.name}, name: $name, description: $description, image: $image, iceHot: $iceHot, price: $price, tag: $tag, category: $category, rating: $rating, time: $time)';
   }
 }

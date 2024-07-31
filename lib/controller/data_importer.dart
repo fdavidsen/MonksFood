@@ -16,6 +16,8 @@ class DataImporter {
         'name': row[1]!.value,
         'image': row[2]!.value,
         'category': row[3]!.value,
+        'latitude': row[4]!.value,
+        'longitude': row[5]!.value,
       });
     }
     await DBManager.instance.insertMany(DBManager.instance.tableStore, storeItems);
@@ -41,12 +43,7 @@ class DataImporter {
   }
 }
 
-List<String> categories = [
-  "Meals",
-  "Coffee",
-  "Drink",
-  "Cake"
-];
+List<String> categories = ["Meals", "Coffee", "Drink", "Cake"];
 
 List<String> discounts = [
   "discount01.png",

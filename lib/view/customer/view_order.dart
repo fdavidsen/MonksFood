@@ -5,14 +5,40 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:monk_food/model/order_modal.dart';
 import 'package:provider/provider.dart';
 
-class ViewOrderPage extends StatelessWidget {
+class ViewOrderPage extends StatefulWidget {
   final Order myOrder;
   ViewOrderPage({super.key, required this.myOrder});
 
   @override
+  _ViewOrderPageState createState() => _ViewOrderPageState();
+}
+
+class _ViewOrderPageState extends State<ViewOrderPage> {
+  LatLng myLocation = const LatLng(3.139263417193467, 101.6922524120604);
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the MapProvider after the initial build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mapProvider = Provider.of<MapProvider>(context, listen: false);
+
+      List<LatLng> locs = [myLocation];
+      for (var cartItem in widget.myOrder.cartItems) {
+        var store = cartItem.menu.store;
+        if (store != null) {
+          LatLng loc = LatLng(store.latitude, store.longitude);
+          locs.add(loc);
+        }
+      }
+      Future.microtask(() => mapProvider.initialize(locs));
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     CameraPosition kGooglePlex = CameraPosition(
-      target: Provider.of<MapProvider>(context).endLocation,
+      target: myLocation,
       zoom: 14,
     );
 
@@ -22,7 +48,7 @@ class ViewOrderPage extends StatelessWidget {
         backgroundColor: const Color(0xFFFFFEF2),
         foregroundColor: const Color(0xFFCD5638),
         title: Text(
-          "Order ${myOrder.id}",
+          "Order ${widget.myOrder.id}",
           style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold),
         ),
       ),
@@ -31,7 +57,7 @@ class ViewOrderPage extends StatelessWidget {
         mapToolbarEnabled: false,
         initialCameraPosition: kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
-          Provider.of<MapProvider>(context, listen: false).setMapController(controller);
+          Provider.of<MapProvider>(context, listen: false).setMapController(controller, widget.myOrder);
         },
         polylines: Set<Polyline>.of(Provider.of<MapProvider>(context).polylines.values),
         markers: Provider.of<MapProvider>(context).markers.toSet(),
@@ -48,10 +74,10 @@ class ViewOrderPage extends StatelessWidget {
             children: [
               ListView.builder(
                   shrinkWrap: true,
-                  itemCount: myOrder.cartItems.length,
+                  itemCount: widget.myOrder.cartItems.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    var item = myOrder.cartItems[index];
+                    var item = widget.myOrder.cartItems[index];
                     print(item);
                     return Card(
                       color: Color(0xFFFFFEF2),
@@ -91,7 +117,7 @@ class ViewOrderPage extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                     trailing: Text(
-                      "RM ${myOrder.subtotal.toStringAsFixed(2)}",
+                      "RM ${widget.myOrder.subtotal.toStringAsFixed(2)}",
                       style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ),
@@ -103,7 +129,7 @@ class ViewOrderPage extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                     trailing: Text(
-                      "RM ${myOrder.deliveryFee.toStringAsFixed(2)}",
+                      "RM ${widget.myOrder.deliveryFee.toStringAsFixed(2)}",
                       style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ),
@@ -115,21 +141,21 @@ class ViewOrderPage extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                     trailing: Text(
-                      "RM ${myOrder.orderFee.toStringAsFixed(2)}",
+                      "RM ${widget.myOrder.orderFee.toStringAsFixed(2)}",
                       style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ),
                   Visibility(
-                    visible: myOrder.couponOffer != "No Offer",
+                    visible: widget.myOrder.couponOffer != "No Offer",
                     child: ListTile(
                       contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       dense: true,
                       title: Text(
-                        myOrder.couponOffer,
+                        widget.myOrder.couponOffer,
                         style: TextStyle(fontSize: 16),
                       ),
                       trailing: Text(
-                        "RM -${myOrder.offerFee.toStringAsFixed(2)}",
+                        "RM -${widget.myOrder.offerFee.toStringAsFixed(2)}",
                         style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ),
@@ -147,7 +173,7 @@ class ViewOrderPage extends StatelessWidget {
                   ),
                 ),
                 trailing: Text(
-                  myOrder.paymentMethod,
+                  widget.myOrder.paymentMethod,
                   style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -161,7 +187,7 @@ class ViewOrderPage extends StatelessWidget {
                   ),
                 ),
                 trailing: Text(
-                  myOrder.couponOffer,
+                  widget.myOrder.couponOffer,
                   style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -174,7 +200,7 @@ class ViewOrderPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 trailing: Text(
-                  "RM ${(myOrder.subtotal + myOrder.deliveryFee + myOrder.orderFee - myOrder.offerFee).toStringAsFixed(2)}",
+                  "RM ${(widget.myOrder.subtotal + widget.myOrder.deliveryFee + widget.myOrder.orderFee - widget.myOrder.offerFee).toStringAsFixed(2)}",
                   style: TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -194,17 +220,17 @@ class MapProvider with ChangeNotifier {
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
   late GoogleMapController googleMapController;
-  LatLng startLocation = const LatLng(3.1330977720777122, 101.68700769480854);
-  LatLng endLocation = const LatLng(3.139263417193467, 101.6922524120604);
 
   final String apiKey = 'AIzaSyCdIQnif6IpMKA-oUdYAox6RERXi76A6fs';
 
-  MapProvider() {
-    addMarker(startLocation);
-    addMarker(endLocation);
+  void initialize(List<LatLng> locs) {
+    markers = [];
+    for (var loc in locs) {
+      addMarker(loc);
+    }
   }
 
-  void setMapController(GoogleMapController controller) {
+  void setMapController(GoogleMapController controller, Order order) {
     googleMapController = controller;
     notifyListeners();
   }

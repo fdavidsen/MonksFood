@@ -1,4 +1,5 @@
 import 'package:monk_food/model/menu_model.dart';
+import 'package:monk_food/model/store_model.dart';
 
 class CartItem {
   int? id;
@@ -28,18 +29,25 @@ class CartItem {
       selectedIceHot: map['selected_ice_hot'] as String,
       isActive: map['is_active'] == 1, // Convert integer to boolean
       menu: Menu(
-        id: map['menu_id'] as int,
-        storeId: map['store_id'] as int,
-        name: map['menu_name'] as String,
-        description: map['description'] as String,
-        image: map['image'] as String,
-        iceHot: map['menu_ice_hot'] as String,
-        price: map['price'] as double,
-        tag: map['tag'] as String,
-        category: map['category'] as String,
-        rating: map['rating'] as double,
-        time: map['time'] as String,
-      ),
+          id: map['menu_id'] as int,
+          storeId: map['store_id'] as int,
+          name: map['menu_name'] as String,
+          description: map['description'] as String,
+          image: map['image'] as String,
+          iceHot: map['menu_ice_hot'] as String,
+          price: map['price'] as double,
+          tag: map['tag'] as String,
+          category: map['category'] as String,
+          rating: map['rating'] as double,
+          time: map['time'] as String,
+          store: Store(
+            id: map['store_id'],
+            name: map['store_name'],
+            image: map['store_image'],
+            category: map['store_category'],
+            latitude: map['store_latitude'],
+            longitude: map['store_longitude'],
+          )),
     );
   }
 

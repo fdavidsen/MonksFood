@@ -58,7 +58,9 @@ class DBManager {
             id INTEGER PRIMARY KEY,
             name TEXT,
             image TEXT,
-            category TEXT
+            category TEXT,
+            latitude REAL,
+            longitude REAL
           );
         ''');
 
@@ -86,7 +88,7 @@ class DBManager {
             qty INTEGER,
             selected_ice_hot TEXT,
             is_active BOOLEAN
-          )
+          );
         ''');
 
         await db.execute('''
@@ -100,7 +102,7 @@ class DBManager {
             coupon_offer TEXT,
             offer_fee REAL,
             payment_method TEXT
-          )
+          );
         ''');
 
         DataImporter.importStoreAndMenuData();

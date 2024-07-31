@@ -32,14 +32,11 @@ class StoresPage extends StatelessWidget {
           SliverAppBar(
             expandedHeight: MediaQuery.of(context).size.height / 4.5,
             leading: IconButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.arrow_back),
-              style: IconButton.styleFrom(
-                foregroundColor: Color(0xFFFFFEF2),
-                backgroundColor: Color(0xFFCD5638)
-              ),
+              style: IconButton.styleFrom(foregroundColor: Color(0xFFFFFEF2), backgroundColor: Color(0xFFCD5638)),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
@@ -47,8 +44,7 @@ class StoresPage extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                        store.image),
+                      image: NetworkImage(store.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -64,40 +60,28 @@ class StoresPage extends StatelessWidget {
                 children: [
                   Text(
                     store.name,
-                    style: TextStyle(
-                      color: Color(0xFF727171),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(color: Color(0xFF727171), fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 24),
                   Text(
                     "Popular Items",
-                    style: TextStyle(
-                      color: Color(0xFF727171),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(color: Color(0xFF727171), fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: popularItems.map((e){
+                      children: popularItems.map((e) {
                         return GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => OrderPage(menu: e))
-                            );
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderPage(menu: e)));
                           },
                           child: Card(
                             color: Color(0xFFFFFEF2),
                             elevation: 4,
                             margin: EdgeInsets.only(right: 10, bottom: 10),
                             child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)
-                              ),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
                               width: 100,
                               height: 250,
                               child: Column(
@@ -107,21 +91,12 @@ class StoresPage extends StatelessWidget {
                                   Container(
                                     height: 100,
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(e.image),
-                                        fit: BoxFit.cover
-                                      ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)
-                                      )
-                                    ),
+                                        image: DecorationImage(image: NetworkImage(e.image), fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
-                                    child: Text(
-                                      e.name
-                                    ),
+                                    child: Text(e.name),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,16 +105,12 @@ class StoresPage extends StatelessWidget {
                                         padding: const EdgeInsets.all(6.0),
                                         child: Text(
                                           "RM ${e.price}",
-                                          style: TextStyle(
-                                            color: Color(0xFFCD5638)
-                                          ),
+                                          style: TextStyle(color: Color(0xFFCD5638)),
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(6.0),
-                                        child: Text(
-                                          "⭐ ${e.rating}"
-                                        ),
+                                        child: Text("⭐ ${e.rating}"),
                                       ),
                                     ],
                                   ),
@@ -154,17 +125,13 @@ class StoresPage extends StatelessWidget {
                   SizedBox(height: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: categories.map((e){
+                    children: categories.map((e) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             e,
-                            style: TextStyle(
-                              color: Color(0xFF727171),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                            ),
+                            style: TextStyle(color: Color(0xFF727171), fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           ListView.builder(
                             padding: EdgeInsets.zero,
@@ -186,22 +153,19 @@ class StoresPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.transparent,
                                     child: Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          menu.image,
-                                        ),
-                                        fit: BoxFit.cover
-                                      ),
-                                      borderRadius: BorderRadius.circular(10)),
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                menu.image,
+                                              ),
+                                              fit: BoxFit.cover),
+                                          borderRadius: BorderRadius.circular(10)),
                                     ),
                                   ),
-                                  onTap: (){
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => OrderPage(menu: menu))
-                                    );
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderPage(menu: menu)));
                                   },
                                 ),
                               );
