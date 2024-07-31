@@ -9,15 +9,23 @@ import 'package:monk_food/view/customer/home.dart';
 import 'package:monk_food/view/customer/drawer/my_account.dart';
 import 'package:monk_food/view/customer/drawer/my_card.dart';
 import 'package:monk_food/view/customer/order.dart';
+import 'package:monk_food/view/customer/view_order.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DBManager.instance.initDB();
   await DataImporter.importStoreAndMenuData();
   String loginRole = await getLoginRole();
+  final GoogleMapsFlutterPlatform mapsImplementation =
+      GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    mapsImplementation.useAndroidViewSurface = true;
+  }
   runApp(MyApp(loginRole: loginRole));
 }
 
@@ -33,13 +41,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BottomNavController()),
         ChangeNotifierProvider(create: (context) => EditController()),
         ChangeNotifierProvider(create: (context) => CardController()),
-        ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
         ChangeNotifierProvider(create: (context) => CartController()),
         ChangeNotifierProvider(create: (context) => ChipSelectionController()),
         ChangeNotifierProvider(create: (context) => CounterController()),
         ChangeNotifierProvider(create: (context) => PaymentController()),
         ChangeNotifierProvider(create: (context) => OfferController()),
         ChangeNotifierProvider(create: (context) => OrderController()),
+        ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
+        ChangeNotifierProvider(create: (context) => MapProvider())
       ],
       child: MaterialApp(
         title: 'Monk\'s Food',
