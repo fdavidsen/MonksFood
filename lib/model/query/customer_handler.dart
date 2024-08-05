@@ -1,5 +1,5 @@
 import 'package:monk_food/model/cart_item_model.dart';
-import 'package:monk_food/model/db_manager.dart';
+import 'package:monk_food/model/query/db_manager.dart';
 import 'package:monk_food/model/customer_model.dart';
 import 'package:monk_food/model/menu_model.dart';
 import 'package:monk_food/model/order_modal.dart';

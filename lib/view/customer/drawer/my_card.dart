@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
-import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/model/query/customer_handler.dart';
 import 'package:monk_food/model/customer_model.dart';
 import 'package:provider/provider.dart';
 

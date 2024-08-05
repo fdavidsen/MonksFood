@@ -3,13 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/controller/data_importer.dart';
-import 'package:monk_food/model/db_manager.dart';
+import 'package:monk_food/controller/driver_auth_provider.dart';
+import 'package:monk_food/model/query/db_manager.dart';
 import 'package:monk_food/view/customer/checkout.dart';
 import 'package:monk_food/view/customer/home.dart';
 import 'package:monk_food/view/customer/drawer/my_account.dart';
 import 'package:monk_food/view/customer/drawer/my_card.dart';
 import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/customer/view_order.dart';
+import 'package:monk_food/view/driver/drawer/my_account.dart';
+import 'package:monk_food/view/driver/home.dart';
 import 'package:monk_food/view/onboard/launch_page.dart';
 import 'package:monk_food/view/onboard/onboarding.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +24,7 @@ void main() async {
   await DBManager.instance.initDB();
   await DataImporter.importStoreAndMenuData();
   String loginRole = await getLoginRole();
-  final GoogleMapsFlutterPlatform mapsImplementation =
-      GoogleMapsFlutterPlatform.instance;
+  final GoogleMapsFlutterPlatform mapsImplementation = GoogleMapsFlutterPlatform.instance;
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     mapsImplementation.useAndroidViewSurface = true;
   }
@@ -39,7 +41,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => OnboardController()),
         ChangeNotifierProvider(create: (context) => BottomNavController()),
+        ChangeNotifierProvider(create: (context) => DriverBottomNavController()),
         ChangeNotifierProvider(create: (context) => EditController()),
+        ChangeNotifierProvider(create: (context) => DriverEditController()),
         ChangeNotifierProvider(create: (context) => CardController()),
         ChangeNotifierProvider(create: (context) => CartController()),
         ChangeNotifierProvider(create: (context) => ChipSelectionController()),
@@ -48,6 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => OfferController()),
         ChangeNotifierProvider(create: (context) => OrderController()),
         ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
+        ChangeNotifierProvider(create: (context) => DriverAuthProvider()),
         ChangeNotifierProvider(create: (context) => MapProvider())
       ],
       child: MaterialApp(
@@ -61,7 +66,7 @@ class MyApp extends StatelessWidget {
         home: loginRole == 'customer'
             ? const CustomerHomePage()
             : loginRole == 'driver'
-                ? const CustomerHomePage()
+                ? const DriverHomePage()
                 : const LaunchPage(),
       ),
     );

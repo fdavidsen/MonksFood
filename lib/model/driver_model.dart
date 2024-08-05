@@ -66,6 +66,6 @@ class Driver {
 
   @override
   String toString() {
-    return 'Driver(id: $id, username: $username, email: $email, phone: $phone, password: $password, bankId: $bankId, bankFirstName: $bankFirstName, bankLastName: $bankLastName, bankPhone: $bankPhone)';
+    return 'Driver(id: $id, username: $username, email: $email, phone: $phone, password: $password, profilePicture: $profilePicture, driverLicenseFront: $driverLicenseFront, driverLicenseBack: $driverLicenseBack, certificate: $certificate, bankId: $bankId, bankFirstName: $bankFirstName, bankLastName: $bankLastName, bankPhone: $bankPhone)';
   }
 }

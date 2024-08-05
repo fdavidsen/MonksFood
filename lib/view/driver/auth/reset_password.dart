@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/model/query/driver_handler.dart';
 import 'package:monk_food/view/driver/auth/login.dart';
 
 class ResetPasswordScreen extends StatefulWidget {

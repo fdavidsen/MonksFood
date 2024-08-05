@@ -10,7 +10,7 @@ class DBManager {
   final String tableCart = 'cart';
   final String tableOrders = 'orders';
   final String databaseName = 'monks_food.db';
-  final int databaseVersion = 2;
+  final int databaseVersion = 1;
 
   static final DBManager instance = DBManager._init();
   static Database? _database;
@@ -49,7 +49,15 @@ class DBManager {
             username TEXT,
             email TEXT,
             phone TEXT,
-            password TEXT
+            password TEXT,
+            profilePicture TEXT,
+            driverLicenseFront TEXT,
+            driverLicenseBack TEXT,
+            certificate TEXT,
+            bankId TEXT,
+            bankFirstName TEXT,
+            bankLastName TEXT,
+            bankPhone TEXT
           );
         ''');
 

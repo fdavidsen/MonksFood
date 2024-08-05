@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/model/driver_model.dart';
-import 'package:monk_food/view/driver/auth/set_bank_account.dart';
+import 'package:monk_food/view/driver/auth/signup/set_bank_account.dart';
 
 class OnlineTestInfoScreen extends StatelessWidget {
   final Driver driver;

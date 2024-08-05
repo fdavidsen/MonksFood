@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
-import 'package:monk_food/controller/customer_auth_provider.dart';
 import 'package:monk_food/controller/data_importer.dart';
-import 'package:monk_food/model/cart_item_model.dart';
-import 'package:monk_food/model/order_modal.dart';
+import 'package:monk_food/controller/driver_auth_provider.dart';
 import 'package:monk_food/model/query/customer_handler.dart';
-import 'package:monk_food/model/customer_model.dart';
+import 'package:monk_food/model/driver_model.dart';
 import 'package:monk_food/view/customer/checkout.dart';
-import 'package:monk_food/view/customer/drawer/my_account.dart';
-import 'package:monk_food/view/customer/drawer/my_card.dart';
+import 'package:monk_food/view/customer/home.dart';
+import 'package:monk_food/view/driver/drawer/my_account.dart';
+import 'package:monk_food/view/driver/drawer/bank_account.dart';
+import 'package:monk_food/view/driver/drawer/support.dart';
 import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/customer/stores.dart';
-import 'package:monk_food/view/customer/drawer/support.dart';
 import 'package:monk_food/view/customer/view_order.dart';
 import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
 
-class CustomerHomePage extends StatefulWidget {
-  const CustomerHomePage({super.key});
+class DriverHomePage extends StatefulWidget {
+  const DriverHomePage({super.key});
 
   @override
-  _CustomerHomePageState createState() => _CustomerHomePageState();
+  _DriverHomePageState createState() => _DriverHomePageState();
 }
 
-class _CustomerHomePageState extends State<CustomerHomePage> {
+class _DriverHomePageState extends State<DriverHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late Customer user;
+  late Driver user;
 
   @override
   void didChangeDependencies() {
@@ -35,11 +34,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   }
 
   Future<void> _loadData() async {
-    final customerAuthProvider = Provider.of<CustomerAuthProvider>(context, listen: false);
-    await customerAuthProvider.loadUser();
-    user = customerAuthProvider.user!;
-    Provider.of<CartController>(context, listen: false)._loadCart(user.id);
-    Provider.of<OrderController>(context, listen: false)._loadOrder(user.id);
+    final driverAuthProvider = Provider.of<DriverAuthProvider>(context, listen: false);
+    await driverAuthProvider.loadUser();
+    user = driverAuthProvider.user!;
   }
 
   @override
@@ -347,14 +344,14 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       drawerEnableOpenDragGesture: false,
       onEndDrawerChanged: (isOpen) {
         if (!isOpen) {
-          Provider.of<BottomNavController>(context, listen: false).changeIndex(0);
+          Provider.of<DriverBottomNavController>(context, listen: false).changeIndex(0);
         }
       },
-      endDrawer: Consumer<BottomNavController>(
-        builder: (context, bottomNavController, child) {
-          if (bottomNavController.selected == 1) {
+      endDrawer: Consumer<DriverBottomNavController>(
+        builder: (context, DriverbottomNavController, child) {
+          if (DriverbottomNavController.selected == 1) {
             return CartDrawer(context);
-          } else if (bottomNavController.selected == 2) {
+          } else if (DriverbottomNavController.selected == 2) {
             return OrderDrawer(context);
           } else {
             return const SizedBox();
@@ -384,9 +381,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             label: 'My Order',
           ),
         ],
-        currentIndex: Provider.of<BottomNavController>(context).selected,
+        currentIndex: Provider.of<DriverBottomNavController>(context).selected,
         onTap: (index) {
-          Provider.of<BottomNavController>(context, listen: false).changeIndex(index);
+          Provider.of<DriverBottomNavController>(context, listen: false).changeIndex(index);
           if (index == 1 || index == 2) {
             _scaffoldKey.currentState?.openEndDrawer();
           }
@@ -625,12 +622,12 @@ Widget SideDrawer(BuildContext context) {
               ListTile(
                 leading: const Icon(Icons.credit_card, color: Color(0xFFFFFEF2)),
                 title: const Text(
-                  "My Card",
+                  "Bank Account",
                   style: TextStyle(color: Color(0xFFFFFEF2)),
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyCardPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BankAccountPage()));
                 },
               ),
             ],
@@ -639,7 +636,7 @@ Widget SideDrawer(BuildContext context) {
         ElevatedButton(
           onPressed: () async {
             await saveLoginRole('none');
-            Provider.of<CustomerAuthProvider>(context, listen: false).unsetUser();
+            Provider.of<DriverAuthProvider>(context, listen: false).unsetUser();
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ChooseIdentity()));
           },
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
@@ -651,62 +648,11 @@ Widget SideDrawer(BuildContext context) {
   );
 }
 
-class BottomNavController extends ChangeNotifier {
+class DriverBottomNavController extends ChangeNotifier {
   int selected = 0;
 
   void changeIndex(int index) {
     selected = index;
-    notifyListeners();
-  }
-}
-
-class CartController extends ChangeNotifier {
-  List<CartItem> cart = [];
-
-  Future<void> _loadCart(int userId) async {
-    cart = await CustomerHandler().getCartItems(userId);
-    notifyListeners();
-  }
-
-  void addCartItem(CartItem item) async {
-    await CustomerHandler().insertCartItem(item);
-    cart.add(item);
-    notifyListeners();
-  }
-
-  Future<void> removeCartItem(CartItem item) async {
-    await CustomerHandler().deleteCartItem(item.id!);
-    cart.remove(item);
-    notifyListeners();
-  }
-
-  void clearCart(int userId) async {
-    await CustomerHandler().clearCart(userId);
-    cart = [];
-    notifyListeners();
-  }
-
-  double calculateTotal() {
-    double total = 0;
-    for (var item in cart) {
-      total += (item.menu.price * item.qty);
-    }
-    return total;
-  }
-}
-
-class OrderController extends ChangeNotifier {
-  List<Order> order = [];
-
-  Future<void> _loadOrder(int userId) async {
-    order = await CustomerHandler().getOrderList(userId);
-    notifyListeners();
-    print(order);
-  }
-
-  void addOrder(Order item) async {
-    await CustomerHandler().insertOrder(item);
-    order.add(item);
     notifyListeners();
   }
 }

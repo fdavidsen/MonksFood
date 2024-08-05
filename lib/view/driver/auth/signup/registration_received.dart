@@ -46,6 +46,13 @@ class RegistrationReceivedScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 30),
+              Image.asset(
+                'assets/driver registration.png', // Replace with the path to your image asset
+                height: 150,
+                width: 150,
+              ),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 50),
                 child: SizedBox(

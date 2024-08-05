@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/auth_utils.dart';
-import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/controller/driver_auth_provider.dart';
+import 'package:monk_food/model/query/driver_handler.dart';
 import 'package:monk_food/view/driver/auth/forgot_password.dart';
-import 'package:monk_food/view/driver/auth/signup.dart';
-import 'package:monk_food/view/customer/home.dart';
+import 'package:monk_food/view/driver/auth/signup/signup.dart';
+import 'package:monk_food/view/driver/home.dart';
+import 'package:provider/provider.dart';
 
 class DriverLoginScreen extends StatefulWidget {
   const DriverLoginScreen({super.key});
@@ -26,8 +28,9 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
       if (user != null) {
         print(user);
         await saveLoginRole('driver');
+        Provider.of<DriverAuthProvider>(context, listen: false).setUser(user);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login successful')));
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CustomerHomePage()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DriverHomePage()));
       } else {
         // Login failed, show error message
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid credentials')));

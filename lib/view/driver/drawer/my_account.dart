@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:monk_food/controller/customer_auth_provider.dart';
-import 'package:monk_food/model/query/customer_handler.dart';
-import 'package:monk_food/model/customer_model.dart';
+import 'package:monk_food/controller/driver_auth_provider.dart';
+import 'package:monk_food/model/query/driver_handler.dart';
+import 'package:monk_food/model/driver_model.dart';
 import 'package:provider/provider.dart';
 
 class MyAccountPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
   final _passwordController = TextEditingController();
   String _errorMessage = '';
 
-  late Customer customer;
+  late Driver driver;
   late Future<void> _loadUserFuture;
 
   @override
@@ -29,20 +31,20 @@ class _MyAccountPageState extends State<MyAccountPage> {
   }
 
   Future<void> _loadUserData() async {
-    final customerAuthProvider = Provider.of<CustomerAuthProvider>(context, listen: false);
-    if (customerAuthProvider.user != null) {
-      customer = customerAuthProvider.user!;
-      _usernameController.text = customer.username;
-      _emailController.text = customer.email;
-      _phoneController.text = customer.phone;
-      _passwordController.text = customer.password;
+    final driverAuthProvider = Provider.of<DriverAuthProvider>(context, listen: false);
+    if (driverAuthProvider.user != null) {
+      driver = driverAuthProvider.user!;
+      _usernameController.text = driver.username;
+      _emailController.text = driver.email;
+      _phoneController.text = driver.phone;
+      _passwordController.text = driver.password;
     }
   }
 
   Future<void> _updateUserData() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      if (_usernameController.text != customer.username) {
-        bool isUsernameUnique = await CustomerHandler().isUsernameUnique(_usernameController.text);
+      if (_usernameController.text != driver.username) {
+        bool isUsernameUnique = await DriverHandler().isUsernameUnique(_usernameController.text);
         if (!isUsernameUnique) {
           setState(() {
             _errorMessage = 'Username already exists';
@@ -51,8 +53,8 @@ class _MyAccountPageState extends State<MyAccountPage> {
         }
       }
 
-      if (_emailController.text != customer.email) {
-        bool isEmailExisted = await CustomerHandler().isEmailExisted(_emailController.text);
+      if (_emailController.text != driver.email) {
+        bool isEmailExisted = await DriverHandler().isEmailExisted(_emailController.text);
         if (isEmailExisted) {
           setState(() {
             _errorMessage = 'Email already exists';
@@ -61,23 +63,26 @@ class _MyAccountPageState extends State<MyAccountPage> {
         }
       }
 
-      final updatedCustomer = Customer(
-        id: customer.id,
+      final updatedDriver = Driver(
+        id: driver.id,
         username: _usernameController.text,
         email: _emailController.text,
         phone: _phoneController.text,
         password: _passwordController.text,
-        cardFirstName: customer.cardFirstName,
-        cardLastName: customer.cardLastName,
-        cardNumber: customer.cardNumber,
-        expirationDate: customer.expirationDate,
-        cvv: customer.cvv,
+        bankId: driver.bankId,
+        bankFirstName: driver.bankFirstName,
+        bankLastName: driver.bankLastName,
+        bankPhone: driver.bankPhone,
+        profilePicture: driver.profilePicture,
+        certificate: driver.certificate,
+        driverLicenseFront: driver.driverLicenseFront,
+        driverLicenseBack: driver.driverLicenseBack,
       );
 
-      customer = updatedCustomer;
-      await CustomerHandler().updateCustomerData(updatedCustomer);
-      Provider.of<CustomerAuthProvider>(context, listen: false).setUser(updatedCustomer);
-      Provider.of<EditController>(context, listen: false).changeMode();
+      driver = updatedDriver;
+      await DriverHandler().updateDriverData(updatedDriver);
+      Provider.of<DriverAuthProvider>(context, listen: false).setUser(updatedDriver);
+      Provider.of<DriverEditController>(context, listen: false).changeMode();
     }
   }
 
@@ -113,22 +118,30 @@ class _MyAccountPageState extends State<MyAccountPage> {
                         "My Account",
                         style: TextStyle(color: Color(0xFFCD5638), fontSize: 40),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 25),
+                        child: Image.file(
+                          File(driver.profilePicture!),
+                          height: 200,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           IconButton(
                             onPressed: () {
-                              if (Provider.of<EditController>(context, listen: false).isEditing) {
+                              if (Provider.of<DriverEditController>(context, listen: false).isEditing) {
                                 _updateUserData();
                               } else {
-                                Provider.of<EditController>(context, listen: false).changeMode();
+                                Provider.of<DriverEditController>(context, listen: false).changeMode();
                               }
                               setState(() {
                                 _errorMessage = '';
                               });
                             },
                             icon: Icon(
-                              Provider.of<EditController>(context).isEditing ? Icons.check : Icons.edit,
+                              Provider.of<DriverEditController>(context).isEditing ? Icons.check : Icons.edit,
                               color: const Color(0xFFCD5638),
                             ),
                           ),
@@ -154,7 +167,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                           enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           disabledBorder: InputBorder.none,
-                          enabled: Provider.of<EditController>(context).isEditing,
+                          enabled: Provider.of<DriverEditController>(context).isEditing,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -184,7 +197,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                           enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           disabledBorder: InputBorder.none,
-                          enabled: Provider.of<EditController>(context).isEditing,
+                          enabled: Provider.of<DriverEditController>(context).isEditing,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -217,7 +230,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                           enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           disabledBorder: InputBorder.none,
-                          enabled: Provider.of<EditController>(context).isEditing,
+                          enabled: Provider.of<DriverEditController>(context).isEditing,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -250,7 +263,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                           enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFCD5638))),
                           disabledBorder: InputBorder.none,
-                          enabled: Provider.of<EditController>(context).isEditing,
+                          enabled: Provider.of<DriverEditController>(context).isEditing,
                         ),
                         obscureText: true,
                         validator: (value) {
@@ -272,7 +285,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
   }
 }
 
-class EditController extends ChangeNotifier {
+class DriverEditController extends ChangeNotifier {
   bool isEditing = false;
 
   void changeMode() {

@@ -1,6 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
-import 'package:monk_food/model/db_manager.dart';
+import 'package:monk_food/model/query/db_manager.dart';
 
 class DataImporter {
   static Future<void> importStoreAndMenuData() async {

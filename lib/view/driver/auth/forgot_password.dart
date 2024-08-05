@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
-import 'package:monk_food/model/driver_handler.dart';
+import 'package:monk_food/model/query/driver_handler.dart';
 import 'package:monk_food/view/driver/auth/otp_verification.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {

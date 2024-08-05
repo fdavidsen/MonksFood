@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/customer_auth_provider.dart';
-import 'package:monk_food/model/customer_handler.dart';
+import 'package:monk_food/model/query/customer_handler.dart';
 import 'package:monk_food/view/customer/auth/forgot_password.dart';
 import 'package:monk_food/view/customer/auth/signup.dart';
 import 'package:monk_food/view/customer/home.dart';
@@ -168,7 +168,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                     child: const Text(
                       'Sign up',
                       style:
-                      TextStyle(decoration: TextDecoration.underline, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
+                          TextStyle(decoration: TextDecoration.underline, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
                     ),
                   ),
                 ],

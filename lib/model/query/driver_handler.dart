@@ -1,8 +1,18 @@
-import 'package:monk_food/model/db_manager.dart';
+import 'package:monk_food/model/query/db_manager.dart';
 import 'package:monk_food/model/driver_model.dart';
 
 class DriverHandler {
   final String tableDrivers = DBManager.instance.tableDrivers;
+
+  Future<int> updateDriverData(Driver driver) async {
+    final db = await DBManager.instance.database;
+    return await db.update(
+      tableDrivers,
+      driver.toMap(),
+      where: 'id = ?',
+      whereArgs: [driver.id],
+    );
+  }
 
   Future<int> register(Map<String, dynamic> user) async {
     return await DBManager.instance.register(tableDrivers, user);
@@ -18,6 +28,15 @@ class DriverHandler {
 
   Future<Driver?> login(String username, String password) async {
     final result = await DBManager.instance.login(tableDrivers, username, password);
+    if (result.isNotEmpty) {
+      return Driver.fromMap(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Driver?> getDriverById(int id) async {
+    final result = await DBManager.instance.getUserById(tableDrivers, id);
     if (result.isNotEmpty) {
       return Driver.fromMap(result.first);
     } else {
