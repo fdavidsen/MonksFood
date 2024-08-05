@@ -10,6 +10,7 @@ import 'package:monk_food/view/customer/home.dart';
 import 'package:monk_food/view/customer/drawer/my_account.dart';
 import 'package:monk_food/view/customer/drawer/my_card.dart';
 import 'package:monk_food/view/customer/order.dart';
+import 'package:monk_food/view/customer/search.dart';
 import 'package:monk_food/view/customer/view_order.dart';
 import 'package:monk_food/view/driver/drawer/my_account.dart';
 import 'package:monk_food/view/driver/home.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => OrderController()),
         ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
         ChangeNotifierProvider(create: (context) => DriverAuthProvider()),
+        ChangeNotifierProvider(create: (context) => SearchControllerProvider()),
         ChangeNotifierProvider(create: (context) => MapProvider())
       ],
       child: MaterialApp(
