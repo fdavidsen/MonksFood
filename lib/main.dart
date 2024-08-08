@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => OnboardController()),
         ChangeNotifierProvider(create: (context) => BottomNavController()),
-        ChangeNotifierProvider(create: (context) => DriverBottomNavController()),
         ChangeNotifierProvider(create: (context) => EditController()),
         ChangeNotifierProvider(create: (context) => DriverEditController()),
         ChangeNotifierProvider(create: (context) => CardController()),
@@ -55,7 +54,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CustomerAuthProvider()),
         ChangeNotifierProvider(create: (context) => DriverAuthProvider()),
         ChangeNotifierProvider(create: (context) => SearchControllerProvider()),
-        ChangeNotifierProvider(create: (context) => MapProvider())
+        ChangeNotifierProvider(create: (context) => MapProvider()),
+        ChangeNotifierProvider(create: (context) => DriverChipController())
       ],
       child: MaterialApp(
         title: 'Monk\'s Food',

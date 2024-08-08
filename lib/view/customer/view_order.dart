@@ -19,7 +19,6 @@ class _ViewOrderPageState extends State<ViewOrderPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the MapProvider after the initial build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mapProvider = Provider.of<MapProvider>(context, listen: false);
 
@@ -57,7 +56,7 @@ class _ViewOrderPageState extends State<ViewOrderPage> {
         mapToolbarEnabled: false,
         initialCameraPosition: kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
-          Provider.of<MapProvider>(context, listen: false).setMapController(controller, widget.myOrder);
+          Provider.of<MapProvider>(context, listen: false).setMapController(controller);
         },
         polylines: Set<Polyline>.of(Provider.of<MapProvider>(context).polylines.values),
         markers: Provider.of<MapProvider>(context).markers.toSet(),
@@ -230,7 +229,7 @@ class MapProvider with ChangeNotifier {
     }
   }
 
-  void setMapController(GoogleMapController controller, Order order) {
+  void setMapController(GoogleMapController controller) {
     googleMapController = controller;
     notifyListeners();
   }

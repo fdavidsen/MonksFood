@@ -3,7 +3,7 @@ import 'package:monk_food/model/cart_item_model.dart';
 class Order {
   String id;
   int userId;
-  String? cartItemIds; // comma-separated CartItem IDs
+  String? cartItemIds;
   List<CartItem> cartItems;
   double subtotal;
   double deliveryFee;

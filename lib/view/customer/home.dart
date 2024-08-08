@@ -450,7 +450,6 @@ class OrderController extends ChangeNotifier {
   Future<void> _loadOrder(int userId) async {
     order = await CustomerHandler().getOrderList(userId);
     notifyListeners();
-    print(order);
   }
 
   void addOrder(Order item) async {

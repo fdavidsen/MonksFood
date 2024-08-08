@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monk_food/controller/auth_utils.dart';
 import 'package:monk_food/controller/data_importer.dart';
 import 'package:monk_food/controller/driver_auth_provider.dart';
+import 'package:monk_food/model/order_modal.dart';
 import 'package:monk_food/model/query/customer_handler.dart';
 import 'package:monk_food/model/driver_model.dart';
 import 'package:monk_food/view/customer/checkout.dart';
@@ -13,6 +14,7 @@ import 'package:monk_food/view/driver/drawer/support.dart';
 import 'package:monk_food/view/customer/order.dart';
 import 'package:monk_food/view/customer/stores.dart';
 import 'package:monk_food/view/customer/view_order.dart';
+import 'package:monk_food/view/driver/order_map.dart';
 import 'package:monk_food/view/onboard/choose_identity.dart';
 import 'package:provider/provider.dart';
 
@@ -25,25 +27,25 @@ class DriverHomePage extends StatefulWidget {
 
 class _DriverHomePageState extends State<DriverHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late Driver user;
+  late Future<Driver> userFuture;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadData();
+    userFuture = _loadData();
   }
 
-  Future<void> _loadData() async {
+  Future<Driver> _loadData() async {
     final driverAuthProvider = Provider.of<DriverAuthProvider>(context, listen: false);
     await driverAuthProvider.loadUser();
-    user = driverAuthProvider.user!;
+    return driverAuthProvider.user!;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFFFFFEF2),
+      backgroundColor: const Color(0xFFEFEFE5),
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: const Color(0xFFCD5638),
@@ -53,31 +55,87 @@ class _DriverHomePageState extends State<DriverHomePage> {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
-        actions: const [SizedBox()],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+
+            },
+          ),
+        ],
         title: ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(
-              Icons.location_on,
-              color: Colors.white,
-            ),
-            title: const Text("The Majestic Hotel Kuala Lumpur"),
-            titleTextStyle: GoogleFonts.josefinSans(
-              textStyle: const TextStyle(color: Colors.white),
-            )),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+          title: const Text("The Majestic Hotel Kuala Lumpur"),
+          titleTextStyle: GoogleFonts.josefinSans(
+            textStyle: const TextStyle(color: Colors.white),
+          ),
+        ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
+          preferredSize: const Size.fromHeight(140),
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Are you hungry?',
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-                prefixIcon: Icon(Icons.search),
-              ),
+            child: FutureBuilder<Driver>(
+              future: userFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final user = snapshot.data!;
+                  return Column(
+                    children: [
+                      ListTile(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                          ),
+                        ),
+                        tileColor: const Color(0xFFFFFEF2),
+                        leading: const CircleAvatar(),
+                        title: Text(
+                          user.username,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: const Text("HM6 7345"),
+                        trailing: const Text(
+                          "Online",
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFC0BFB9),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                        ),
+                        child: const Text(
+                          "Logged from April 19, 7:31 PM",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFFCD5638),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  );
+                }
+              },
             ),
           ),
         ),
@@ -89,478 +147,176 @@ class _DriverHomePageState extends State<DriverHomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 20),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "My Task",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'View all',
-                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: categories.map((e) {
-                    return Column(
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/${e.toLowerCase()}.png"), fit: BoxFit.cover)),
-                        ),
-                        Text(
-                          e,
-                          style: const TextStyle(color: Color(0xFFCD5638), fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    );
-                  }).toList(),
+                  children: [
+                    ChoiceChip(
+                      label: const Text("All"),
+                      selected: Provider.of<DriverChipController>(context).choice == "All",
+                      selectedColor: const Color(0xFFCD5638),
+                      backgroundColor: Colors.white,
+                      checkmarkColor: Colors.white,
+                      labelStyle: TextStyle(
+                        color: Provider.of<DriverChipController>(context).choice == "All" ? Colors.white : Colors.black,
+                      ),
+                      onSelected: (val) {
+                        Provider.of<DriverChipController>(context, listen: false).changeChoice("All");
+                      },
+                    ),
+                    const SizedBox(width: 15),
+                    ChoiceChip(
+                      label: const Text("Confirmed"),
+                      selected: Provider.of<DriverChipController>(context).choice == "Confirmed",
+                      selectedColor: const Color(0xFFCD5638),
+                      backgroundColor: Colors.white,
+                      checkmarkColor: Colors.white,
+                      labelStyle: TextStyle(
+                        color: Provider.of<DriverChipController>(context).choice == "Confirmed" ? Colors.white : Colors.black,
+                      ),
+                      onSelected: (val) {
+                        Provider.of<DriverChipController>(context, listen: false).changeChoice("Confirmed");
+                      },
+                    ),
+                    const SizedBox(width: 15),
+                    ChoiceChip(
+                      label: const Text("Assigned"),
+                      selectedColor: const Color(0xFFCD5638),
+                      backgroundColor: Colors.white,
+                      checkmarkColor: Colors.white,
+                      selected: Provider.of<DriverChipController>(context).choice == "Assigned",
+                      labelStyle: TextStyle(
+                        color: Provider.of<DriverChipController>(context).choice == "Assigned" ? Colors.white : Colors.black,
+                      ),
+                      onSelected: (val) {
+                        Provider.of<DriverChipController>(context, listen: false).changeChoice("Assigned");
+                      },
+                    ),
+                    const SizedBox(width: 15),
+                    ChoiceChip(
+                      label: const Text("On Delivery"),
+                      selectedColor: const Color(0xFFCD5638),
+                      backgroundColor: Colors.white,
+                      checkmarkColor: Colors.white,
+                      selected: Provider.of<DriverChipController>(context).choice == "On Delivery",
+                      labelStyle: TextStyle(
+                        color: Provider.of<DriverChipController>(context).choice == "On Delivery" ? Colors.white : Colors.black,
+                      ),
+                      onSelected: (val) {
+                        Provider.of<DriverChipController>(context, listen: false).changeChoice("On Delivery");
+                      },
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Deals Around You",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'View all',
-                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: discounts.map((e) {
-                    return Container(
-                      width: 270,
-                      height: 160,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                          image: DecorationImage(image: AssetImage("assets/$e"), fit: BoxFit.cover), borderRadius: BorderRadius.circular(10)),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Stores Near You",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'More',
-                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: FutureBuilder(
-                    future: CustomerHandler().getAllStores(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text('No stores found'));
-                      }
-
-                      final stores = snapshot.data!;
-                      stores.shuffle();
-                      return FutureBuilder(
-                          future: CustomerHandler().getAllMenu(),
-                          builder: (context, snapshot2) {
-                            if (snapshot2.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
-                            } else if (snapshot2.hasError) {
-                              return Center(child: Text('Error: ${snapshot2.error}'));
-                            } else if (!snapshot2.hasData || snapshot2.data!.isEmpty) {
-                              return const Center(child: Text('No stores found'));
-                            }
-                            final menus = snapshot2.data!;
-
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: stores.map((e) {
-                                final storeMenus = menus.where((menu) => menu.storeId == e.id).toList();
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => StoresPage(
-                                              store: e,
-                                              menus: storeMenus,
-                                            )));
-                                  },
-                                  child: Hero(
-                                    tag: e.id,
-                                    child: Container(
-                                      width: 270,
-                                      height: 160,
-                                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(image: NetworkImage(e.image), fit: BoxFit.cover),
-                                          borderRadius: BorderRadius.circular(10)),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.transparent,
-                                                Colors.black.withOpacity(0.7),
-                                              ],
-                                              stops: const [0.0, 0.7],
-                                            ),
-                                            borderRadius: BorderRadius.circular(10)),
-                                        child: Material(
-                                          color: Colors.transparent,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                e.name,
-                                                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                e.category,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          });
-                    }),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Recommended",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'More',
-                      style: TextStyle(fontWeight: FontWeight.bold, decorationColor: Color(0xFFCD5638), color: Color(0xFFCD5638), fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              FutureBuilder(
-                  future: CustomerHandler().getAllMenu(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No stores found'));
-                    }
-
-                    final menus = snapshot.data!;
-                    menus.shuffle();
-                    final limitedMenus = menus.take(5).toList();
-                    limitedMenus.sort((a, b) => b.rating.compareTo(a.rating));
-                    return ListView.builder(
-                      itemCount: limitedMenus.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final menu = limitedMenus[index];
-                        return Card(
-                          color: const Color(0xFFFFFEF2),
-                          elevation: 4,
-                          child: ListTile(
-                            titleAlignment: ListTileTitleAlignment.center,
-                            title: Text(menu.name),
-                            subtitle: Text("RM ${menu.price}  ${menu.time} mins\n⭐${menu.rating} ${menu.tag}"),
-                            isThreeLine: true,
-                            leading: Material(
-                              elevation: 4,
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.transparent,
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                          menu.image,
-                                        ),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10)),
+              const SizedBox(height: 10),
+              ListView.builder(
+                itemCount: sampleOrders.length,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  var item = sampleOrders;
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => DriverMap(order: item[index]))
+                      );
+                    },
+                    child: Card(
+                      elevation: 4,
+                      color: Color(0xFFFFFFEF),
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                "Order #${item[index]["id"]}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18
+                                ),
+                              ),
+                              subtitle: Text(
+                                "Today, 8:30 AM"
+                              ),
+                              trailing: Text(
+                                item[index]["status"],
+                                style: TextStyle(
+                                  color: item[index]["status"] == "Completed" ? Colors.green : Colors.orange,
+                                  fontWeight: FontWeight.bold
+                                ),
                               ),
                             ),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderPage(menu: menu)));
-                            }, // Assume image is a URL
-                          ),
-                        );
-                      },
-                    );
-                  }),
-              const SizedBox(height: 10)
+                            Divider(
+                              thickness: 2,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: item[index]["orders"].length,
+                              itemBuilder: (context, index2){
+                                var loc = item[index]["orders"];
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.business,
+                                        color: Colors.orange,
+                                      ),
+                                      title: Text(
+                                        loc[index2]["location"]
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 27),
+                                      height: 15,
+                                      width: 2,
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              }
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.location_on,
+                                color: Colors.green,
+                              ),
+                              title: Text(
+                                item[index]["destination"]["location"]
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
       ),
-      drawerEnableOpenDragGesture: false,
-      onEndDrawerChanged: (isOpen) {
-        if (!isOpen) {
-          Provider.of<DriverBottomNavController>(context, listen: false).changeIndex(0);
-        }
-      },
-      endDrawer: Consumer<DriverBottomNavController>(
-        builder: (context, DriverbottomNavController, child) {
-          if (DriverbottomNavController.selected == 1) {
-            return CartDrawer(context);
-          } else if (DriverbottomNavController.selected == 2) {
-            return OrderDrawer(context);
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
       drawer: SideDrawer(context),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFCD5638),
-        type: BottomNavigationBarType.shifting,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white60,
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFFCD5638),
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFFCD5638),
-            icon: Icon(Icons.shopping_cart),
-            label: 'My Cart',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFFCD5638),
-            icon: Icon(Icons.article),
-            label: 'My Order',
-          ),
-        ],
-        currentIndex: Provider.of<DriverBottomNavController>(context).selected,
-        onTap: (index) {
-          Provider.of<DriverBottomNavController>(context, listen: false).changeIndex(index);
-          if (index == 1 || index == 2) {
-            _scaffoldKey.currentState?.openEndDrawer();
-          }
-        },
-      ),
+      drawerEnableOpenDragGesture: false,
     );
   }
-}
-
-Widget CartDrawer(BuildContext context) {
-  return Drawer(
-    backgroundColor: const Color(0xFFCD5638),
-    child: Column(
-      children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
-            color: Color(0xFFCD5638),
-          ),
-          child: Center(
-            child: Text(
-              'My Cart',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: Provider.of<CartController>(context).cart.isEmpty ? 1 : Provider.of<CartController>(context).cart.length,
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            itemBuilder: (context, index) {
-              if (Provider.of<CartController>(context).cart.isEmpty) {
-                return const ListTile(
-                  title: Text(
-                    "your cart is empty",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFFFFFEF2)),
-                  ),
-                );
-              } else {
-                var item = Provider.of<CartController>(context).cart;
-                return Card(
-                  color: const Color(0xFFFFFEF2),
-                  elevation: 4,
-                  child: ListTile(
-                    titleAlignment: ListTileTitleAlignment.center,
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: Text(item[index].menu.name),
-                    subtitle: Text("RM ${item[index].menu.price}  ${item[index].menu.time} mins\nAmount: ${item[index].qty}"),
-                    isThreeLine: true,
-                    leading: Material(
-                      elevation: 4,
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.transparent,
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                  item[index].menu.image,
-                                ),
-                                fit: BoxFit.cover),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.cancel_rounded),
-                      color: const Color(0xFFCD5638),
-                      onPressed: () {
-                        Provider.of<CartController>(context, listen: false).removeCartItem(item[index]);
-                      },
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ),
-        const SizedBox(height: 15),
-        Visibility(
-          visible: Provider.of<CartController>(context).cart.isNotEmpty,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CheckoutPage()));
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
-            child: const Text("Checkout"),
-          ),
-        ),
-        const SizedBox(height: 15),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(foregroundColor: const Color(0xFFFFFEF2)),
-          child: const Text("Explore More"),
-        ),
-        const SizedBox(height: 15)
-      ],
-    ),
-  );
-}
-
-Widget OrderDrawer(BuildContext context) {
-  return Drawer(
-    backgroundColor: const Color(0xFFCD5638),
-    child: Column(
-      children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
-            color: Color(0xFFCD5638),
-          ),
-          child: Center(
-            child: Text(
-              'My Order',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: Provider.of<OrderController>(context).order.isEmpty ? 1 : Provider.of<OrderController>(context).order.length,
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            itemBuilder: (context, index) {
-              if (Provider.of<OrderController>(context).order.isEmpty) {
-                return const ListTile(
-                  title: Text(
-                    "checkout for some order",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFFFFFEF2)),
-                  ),
-                );
-              } else {
-                var item = Provider.of<OrderController>(context).order;
-                return Card(
-                  color: const Color(0xFFFFFEF2),
-                  elevation: 4,
-                  child: ListTile(
-                    titleAlignment: ListTileTitleAlignment.center,
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: const Text("Order Number:"),
-                    subtitle: Text("${item[index].id}\nSubtotal: RM ${item[index].subtotal.toStringAsFixed(2)}"),
-                    isThreeLine: true,
-                    trailing: IconButton(
-                      icon: const Icon(Icons.arrow_circle_right),
-                      color: const Color(0xFFCD5638),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewOrderPage(myOrder: item[index])));
-                      },
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ),
-        const SizedBox(height: 15),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFFEF2), foregroundColor: const Color(0xFFCD5638)),
-          child: const Text("Explore More"),
-        ),
-        const SizedBox(height: 15)
-      ],
-    ),
-  );
 }
 
 Widget SideDrawer(BuildContext context) {
@@ -648,11 +404,58 @@ Widget SideDrawer(BuildContext context) {
   );
 }
 
-class DriverBottomNavController extends ChangeNotifier {
-  int selected = 0;
+class DriverChipController extends ChangeNotifier{
+  String choice = "All";
 
-  void changeIndex(int index) {
-    selected = index;
+  void changeChoice(String c){
+    choice = c;
     notifyListeners();
   }
 }
+
+List<Map<String, dynamic>> sampleOrders = [
+  {
+    "id": "202408075201",
+    "status": "On Delivery",
+    "time": "Today, 12:00 PM",
+    "orders": [
+      {
+        "location": "Starbucks",
+        "latitude": 3.13528,
+        "longitude":  101.6871
+      },
+      {
+        "location": "Burger King",
+        "latitude": 3.13601,
+        "longitude":  101.689
+      },
+    ],
+    "destination": {
+      "location": "The Majestic Hotel Kuala Lumpur",
+      "latitude": 3.13950166142615,
+      "longitude":  101.69226325815785
+    }
+  },
+  {
+    "id": "202408075200",
+    "status": "Completed",
+    "time": "Today, 8:30 AM",
+    "orders": [
+      {
+        "location": "Kentucky Fried Chicken",
+        "latitude": 3.13412,
+        "longitude":  101.68653
+      },
+      {
+        "location": "OldTown White Coffee",
+        "latitude": 3.139003,
+        "longitude":  101.686855
+      },
+    ],
+    "destination": {
+      "location": "The Majestic Hotel Kuala Lumpur",
+      "latitude": 3.13950166142615,
+      "longitude":  101.69226325815785
+    }
+  }
+];
